@@ -3,6 +3,9 @@
 These are my Linux kernel lectures for GlobalLogic kernel course. Sources are
 in LaTeX format. Compiled PDF files are included as well.
 
+In `bbb-tutorial/` directory you can find my up-to-date tutorial for BeagleBone
+Black bring up.
+
 ## Build dependencies
 
 - fonts-fira (FiraSans fonts)

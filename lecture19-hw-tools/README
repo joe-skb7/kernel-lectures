@@ -1,0 +1,10 @@
+- strace?
+- JTAG
+- scope: use it to show how measure delay between button and LED in driver we
+         wrote (+ sniff serial console?)
+- LA: use my LA to show debugging of I2C driver we wrote
+- omapconf (explain about /dev/mem, OMAP specific)
+- HW observers (hwobs)
+- electornics:
+  - test points (test pads): TP
+- wireshark, tcpdump?

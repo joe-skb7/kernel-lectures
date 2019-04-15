@@ -1,0 +1,25 @@
+Kernel Course: Lecture 18
+=========================
+
+Dependencies:
+
+ - fonts-fira (FiraSans fonts)
+ - python-pygments
+ - rubber
+ - texlive-common
+ - texlive-fonts-extra
+ - texlive-fonts-recommended
+ - texlive-latex-extra
+ - texlive-latex-recommended
+ - texlive-luatex
+ - texlive-xetex
+
+
+References:
+
+[1] http://tug.ctan.org/macros/latex2e/contrib/beamer/doc/beameruserguide.pdf
+[2] https://rosschurchley.com/2016/03/13/metropolis-beamer-theme/
+[3] https://rosschurchley.com/2016/03/14/owl-beamer-color-theme/
+[4] http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/beamer-contrib/themes/metropolis/doc/metropolistheme.pdf
+[5] http://ctan.math.washington.edu/tex-archive/macros/latex/contrib/beamer-contrib/themes/beamercolorthemeowl/beamercolorthemeowl.pdf
+[6] https://github.com/matze/mtheme/blob/master/demo/demo.tex

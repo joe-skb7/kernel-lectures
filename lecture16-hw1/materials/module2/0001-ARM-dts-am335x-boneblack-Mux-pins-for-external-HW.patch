@@ -1,0 +1,67 @@
+From 019299e83aaec606dce745ad730d19e7cf6ac9da Mon Sep 17 00:00:00 2001
+From: Sam Protsenko <joe.skb7@gmail.com>
+Date: Mon, 18 Mar 2019 17:15:48 +0200
+Subject: [PATCH] ARM: dts: am335x-boneblack: Mux pins for external HW
+
+Mux pins connected to external HW (LED and button) in GPIO mode:
+ - add pinmux entries for those pins
+ - use pinmux entries in "soc" node, so that pinctrl subsystem actually
+   remuxes those pins in GPIO mode
+
+When booting with this dtb file, we can request GPIO0_27 line and read
+its input value (or request interrupt on that line change). GPIO number
+is easy to calculate:
+
+    gpio_num = gpio_lines_per_bank * bank_num + gpio_num
+
+On AM335x we have 32 GPIO lines in one GPIO bank. First GPIO bank is
+gpio0. So gpio_num for GPIO0_27 line is:
+
+    gpio_num = 32 * 0 + 27 = 27
+
+Use that number in your kernel module to request GPIO line. Now when you
+press the button, you can see the change on GPIO line in your module,
+either by reading GPIO value of that line, or by configuring the
+interrupt handler (ISR) for that GPIO line.
+
+The last thing worth mentioning: this line is pulled-up with external
+resistor on your breadboard. That's why we don't pull-up this line with
+an internal resistor in device tree. Also, this means that you will see:
+ - "1" when button is not pressed
+ - "0" when button is pressed
+And if you want to request interrupt for that line, be sure to configure
+it for "falling" change (from "1" to "0"), exactly for reason stated
+above.
+
+Signed-off-by: Sam Protsenko <joe.skb7@gmail.com>
+---
+ arch/arm/boot/dts/am335x-boneblack.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index d154d3133c16..141fdd7c3091 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -26,3 +26,19 @@
+ 		opp-supported-hw = <0x06 0x0100>;
+ 	};
+ };
++
++&am33xx_pinmux {
++	hw_pins: hw_pins {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x82c, PIN_INPUT | MUX_MODE7)		/* gpmc_ad11.gpio0_27 */
++			AM33XX_IOPAD(0x83c, PIN_OUTPUT | MUX_MODE7)		/* gpmc_ad15.gpio1_15 */
++		>;
++	};
++};
++
++/ {
++	soc {
++		pinctrl-names = "default";
++		pinctrl-0 = <&hw_pins>;
++	};
++};
+-- 
+2.20.1
+

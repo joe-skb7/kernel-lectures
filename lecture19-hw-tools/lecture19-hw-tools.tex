@@ -1,0 +1,576 @@
+\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
+\usetheme{metropolis}
+%\usecolortheme[snowy,cautious]{owl}
+\usecolortheme[snowy]{owl}
+\metroset{block=fill}
+
+% For regular math font
+\usefonttheme[onlymath]{serif}
+
+\usepackage{appendixnumberbeamer}
+\usepackage{booktabs}
+\usepackage{fancyvrb}
+\usepackage{makecell}
+\usepackage{xcolor}
+%\usepackage{soul}
+\usepackage[normalem]{ulem}
+\usepackage{hyperref}
+\hypersetup{colorlinks,allcolors=.,urlcolor=blue}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage[siunitx,europeanresistors]{circuitikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{listings}
+%\usepackage{media9}
+
+% For tikz
+\colorlet{darkgreen}{OliveGreen}
+\colorlet{darkred}{BrickRed}
+% Not used
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{myblue}{rgb}{0,0,1}
+% For C
+\definecolor{comment}{RGB}{0,128,0} % dark green
+\definecolor{string}{RGB}{255,0,0}  % red
+\definecolor{keyword}{RGB}{0,0,255} % blue
+
+% Schematic elements colors
+\tikzset{
+  R/.append style={color=darkred, /tikz/text=black},
+  battery1/.append style={color=darkred, /tikz/text=black},
+  leDo/.append style={color=darkred, /tikz/text=black},
+  short/.append style={color=darkgreen, /tikz/text=black},
+  nos/.append style={color=darkred, /tikz/text=black},
+  every vcc node/.style={color=darkred, /tikz/text=black},
+  every ground node/.style={color=darkred, /tikz/text=black},
+  %%% Pin element definition (crossed-out box)
+  box/.style={
+    rectangle, minimum size=0.5 cm, very thick, draw=black, color=darkred
+  },
+  pin/.style={
+    box,
+    append after command={
+      [every edge/.append style={
+        very thick,
+        darkred,
+        shorten >=\pgflinewidth,
+        shorten <=\pgflinewidth,
+      }]
+      (\tikzlastnode.north west) edge (\tikzlastnode.south east)
+      (\tikzlastnode.north east) edge (\tikzlastnode.south west)
+    }
+  }
+}
+
+% Fix dashs/hyphens in listings
+\makeatletter
+\lst@CCPutMacro\lst@ProcessOther {"2D}{\lst@ttfamily{-{}}{-{}}}
+\@empty\z@\@empty
+\makeatother
+
+\newfontfamily\Bera{Bitstream Vera Sans Mono}[Scale=1]
+\newfontfamily\TgCursor{TeX Gyre Cursor}[Scale=1]
+\newfontfamily\Dejavu{DejaVu Sans Mono}[Scale=1]
+%\newfontfamily\Consolas{Consolas}[Scale=0.85]
+\newfontfamily\Consolas{Consolas}[Scale=1]
+
+\lstdefinestyle{global} {
+%  basicstyle=\fontfamily{cmvtt}\selectfont
+%  basicstyle=\tiny\ttfamily,
+%  basicstyle=\tiny\Dejavu,
+  basicstyle=\tiny\Consolas,
+  backgroundcolor=\color{white},
+  commentstyle=\itshape\color{comment},
+  stringstyle=\color{string},
+  keywordstyle=\bfseries\color{keyword},
+  %identifierstyle=\bfseries,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  frame=lines,
+  breaklines=true,
+  prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+  showstringspaces=false,
+  upquote=true,
+  tabsize=8,
+  escapeinside=\`\`,
+}
+
+\lstdefinestyle{c} {
+  escapeinside=\`\`,
+}
+
+\lstdefinestyle{make} {
+  language=make,
+  morekeywords={if,ifneq,else,elseif,endif},
+}
+
+\lstset {
+  language=C,
+  style=global,
+}
+
+% allowframebreaks numbering in the title
+\newcounter{cont}
+\makeatletter
+\setbeamertemplate{frametitle continuation}{%
+    \setcounter{cont}{\beamer@endpageofframe}%
+    \addtocounter{cont}{1}%
+    \addtocounter{cont}{-\beamer@startpageofframe}%
+    (\insertcontinuationcount/\arabic{cont})%
+}
+\makeatother
+
+\title{Kernel Course: Lecture 19}
+\subtitle{Hardware Tools in Embedded Kernel Development}
+\date{\today}
+\author{Sam Protsenko}
+\institute{GlobalLogic}
+
+\begin{document}
+
+\sisetup{
+  math-rm = \mathrm,
+  inter-unit-product = \ensuremath{{}\cdot{}},
+  per-mode = fraction,
+%  fraction-function = \tfrac,
+%  unit-color = purple
+}
+
+\maketitle
+
+\begin{frame}{Agenda}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ------------------------------------------------------------------------------
+
+\begin{frame}
+  \frametitle{Hardware Tools Overview}
+  Where it can be useful?
+  \begin{itemize}
+    \item Debugging hardware issues (obviously)
+    \item Board bringup (measuring clocks, voltages, etc)
+    \item Fixing adapter drivers
+    \item Performance optimizations
+    \item Power management optimizations
+    \item Investigating low-level components
+    \item Debugging subtle problems
+  \end{itemize}
+\end{frame}
+
+\section{Multimeter}
+
+\begin{frame}
+  \frametitle{Multimeter Overview}
+  \begin{itemize}
+    \item Measure voltages:
+      \begin{itemize}
+        \item Can be used for power issues diagnostics
+        \item Helpful during board bring-up
+      \end{itemize}
+    \item Measure consumed current:
+      \begin{itemize}
+        \item Useful for power management improvements
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Current Measurement}
+  \vspace*{-2mm}
+  \begin{columns}
+  \column{0.5\textwidth}
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.8]{images/ammeter.pdf}
+      \caption{Ammeter Connection}
+    \end{figure}
+  \column{0.5\textwidth}
+    \begin{figure}
+      \centering
+      \includegraphics[scale=0.07]{images/current-cable.jpg}
+      \caption{Measurement Cable}
+    \end{figure}
+  \end{columns}
+
+  Power can be calculated:
+  \[ P = V \cdot I \]
+\end{frame}
+
+\begin{frame}[standout]
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.8]{images/multimeter.png}
+  \end{figure}
+  Multimeter Demo: Suspend/Resume Current
+\end{frame}
+
+\section{Scope}
+
+\begin{frame}
+  \frametitle{Scope Overview}
+  \begin{itemize}
+    \item Software vs hardware
+    \item Parameters: frequency, data rate; + probes (capacity)
+    \item Measuring periodic signals
+    \item Trigger feature
+    \item Divisors (/1, /10)
+    \item 2 channels (common ground!)
+    \item Scale: time, voltage
+    \item ``Auto'' button
+    \item ``Run/stop'' button
+    \item Measure mode
+  \end{itemize}
+  How it can be useful for kernel development?
+\end{frame}
+
+\begin{frame}[standout]
+  \frametitle{Demo 1}
+  Scope Demo \#1: Measuring Delay
+\end{frame}
+
+\begin{frame}[standout]
+  \frametitle{Demo 2}
+  Scope Demo \#2: Investigating Kernel Sleeps
+\end{frame}
+
+\section{Logic Analyzer}
+
+\begin{frame}
+  \frametitle{Logic Analyzer Overview}
+  \begin{itemize}
+    \item Catches digital levels
+    \item Stores collected data to internal (hardware) buffer
+    \item App can parse protocols (I2C, UART, etc)
+    \item Parameters: max data rate (freq), ports count, protocols support
+    \item Useful for debugging (sw, hw) and reverse engineering (``sniffing'')
+    \item Some specialized LAs exist (like USB ones)
+  \end{itemize}
+  How it can be useful for kernel development?
+\end{frame}
+
+\begin{frame}[standout]
+  \frametitle{Demo 1}
+  LA Demo \#1: I2C (SDA, SCL)
+\end{frame}
+
+\begin{frame}[standout]
+  \frametitle{Demo 2}
+  LA Demo \#2: UART (Tx, Rx)
+\end{frame}
+
+\begin{frame}[standout]
+  Take Five
+\end{frame}
+
+\section{JTAG}
+
+\begin{frame}
+  \frametitle{JTAG Overview}
+  \begin{itemize}
+    \item OpenOCD: Flyswatter (FT2232H based, MPSSE)
+    \item Proprietary JTAG: XDS100v2
+    \item Allows one to debug program running on board just like user-space
+          application with GDB:
+      \begin{itemize}
+        \item Breakpoints
+        \item Read/write registers
+        \item Stop/run CPU
+        \item Read/write memory
+        \item Load images
+        \item Examine stack
+        \item Can debug U-Boot, kernel, user-space apps/libs, even ROM-code...
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{OpenOCD}
+
+\begin{frame}[standout]
+  OpenOCD
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{OpenOCD Overview}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{images/openocd.pdf}
+    \caption{Debugging BBB with OpenOCD}
+  \end{figure}
+  \begin{columns}
+    \column{0.5\textwidth}
+      OpenOCD creates servers for:
+      \begin{itemize}
+        \item Telnet (port 4444 on localhost)
+        \item GDB (port 3333 on localhost)
+      \end{itemize}
+    \column{0.5\textwidth}
+      Once OpenOCD is running, you can run:
+      \begin{lstlisting}
+        $ telnet localhost 4444
+          `or`
+        $ arm-eabi-gdb vmlinux
+      \end{lstlisting}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Flyswatter2 Overview}
+  \begin{columns}
+    \column{0.4\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.3]{images/bbb-connector.jpg}
+        \caption{BBB JTAG Connector}
+      \end{figure}
+    \column{0.6\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.32]{images/bbb-and-flyswatter.jpg}
+        \caption{BBB and Flyswatter2}
+      \end{figure}
+  \end{columns}
+  \vspace*{-5mm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kernel Preparations}
+  \begin{itemize}
+    \item Enable \texttt{CONFIG\_DEBUG\_INFO} (the same as \texttt{-g})
+    \item Disable \texttt{CONFIG\_WATCHDOG} (just in case)
+    \item Make sure JTAG clock (DEBUGSS on BBB) is alive in kernel
+          (see next slide)
+    \item Rebuild, add \texttt{zImage} to rootfs, flash to BBB
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{Kernel Preparations (cont'd)}
+  \texttt{arch/arm/mach-omap2/omap\_hwmod\_33xx\_data.c}:
+  \begin{lstlisting}
+static struct omap_hwmod am33xx_debugss_hwmod = {
+        .name           = "debugss",
+        .class          = &am33xx_debugss_hwmod_class,
+        .clkdm_name     = "l3_aon_clkdm",
++       .flags          = (HWMOD_INIT_NO_IDLE | HWMOD_INIT_NO_RESET),
+        .main_clk       = "trace_clk_div_ck",
+        .prcm           = {
+  \end{lstlisting}
+  Without this patch you'll see \texttt{STICKY BIT} errors (in OpenOCD terminal)
+  when kernel starts running.
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{OpenOCD Preparations}
+  Install OpenOCD (my version is 0.10.0):
+  \begin{lstlisting}[language=bash]
+`\$` sudo apt update
+`\$` sudo apt install openocd
+  \end{lstlisting}
+
+  \begin{itemize}
+    \item Figure out correct OpenOCD interface and target config files:\\
+      \begin{itemize}
+        \item \texttt{interface/ftdi/flyswatter2.cfg}
+        \item \texttt{target/am335x.cfg}
+      \end{itemize}
+    \item ...but those files from upstream OpenOCD won't work
+    \item Use Flyswatter2 config from TinCanTools site (see next page)
+%    \item Come up with correct OpenOCD run command (or board configuration)
+%    \item Use correct adapter frequency (\SI{1000}{\kilo\hertz} for Flyswatter2)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim,allowframebreaks=1]
+  \frametitle{OpenOCD Working Script for Flyswatter2}
+  \lstinputlisting[language=tcl,caption=ti\_beaglebone\_with\_fs2\_mod.cfg]{materials/ti_beaglebone_with_fs2_mod.cfg}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{Run OpenOCD}
+  \begin{enumerate}
+  \item Connect Flyswatter2 to BBB using adapter kit
+  \item Connect Flyswatter2 to PC via USB
+  \item Connect BBB to PC via USB (power); \\
+        ``TARGET RESET'' LED on Flyswatter is glowing, CPU is in reset state
+  \item Run OpenOCD command:
+    \begin{lstlisting}[language=bash,numbers=none]
+`\$` openocd -f ./ti_beaglebone_with_fs2_mod.cfg -c "init" -c "reset init"
+    \end{lstlisting}
+  We will use this terminal to track OpenOCD log.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{Correct OpenOCD Command Output}
+  \vspace*{-5mm}
+  \begin{lstlisting}[numbers=none]
+adapter speed: 16000 kHz
+Info : auto-selecting first available session transport "jtag". To override use 'transport select <transport>'.
+Warn : target name is deprecated use: 'cortex_a'
+trst_and_srst separate srst_gates_jtag trst_push_pull srst_open_drain connect_deassert_srst
+Info : ftdi: if you experience problems at higher adapter clocks, try the command "ftdi_tdo_sample_edge falling"
+Info : clock speed 16000 kHz
+
+`\textbf{Info : JTAG tap: am335x.jrc tap/device found: 0x2b94402f (mfg: 0x017 (Texas Instruments), part: 0xb944, ver: 0x2)}`
+Info : JTAG tap: am335x.dap enabled
+Info : DAP transaction stalled (WAIT) - slowing down
+Info : DAP transaction stalled (WAIT) - slowing down
+Info : DAP transaction stalled (WAIT) - slowing down
+Error: target->coreid 0 powered down!
+
+`\textbf{Info : JTAG tap: am335x.jrc tap/device found: 0x2b94402f (mfg: 0x017 (Texas Instruments), part: 0xb944, ver: 0x2)}`
+Info : JTAG tap: am335x.dap enabled
+Info : DAP transaction stalled (WAIT) - slowing down
+Info : DAP transaction stalled (WAIT) - slowing down
+Info : DAP transaction stalled (WAIT) - slowing down
+Info : am335x.cpu: hardware has 6 breakpoints, 2 watchpoints
+  \end{lstlisting}
+  \vspace*{-5mm}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{OpenOCD over GDB (page 1)}
+  Let's start debug session in GDB:
+  \begin{lstlisting}[numbers=none]
+    `\$` arm-eabi-gdb vmlinux
+
+    (gdb) target remote localhost:3333
+    (gdb) monitor cortex_a dacrfixup on
+    (gdb) continue
+  \end{lstlisting}
+  What we did here:
+  \begin{enumerate}
+    \item Connect to OpenOCD's GDB server, using Linux kernel symbols
+    \item Using OpenOCD \texttt{cortex\_a} command, do a workaround for software
+          breakpoints (Linux kernel maps \texttt{.text} read-only, and the
+          debugger cannot write a breakpoint due to that)
+    \item Continue CPU execution (as it was in reset state initially);\\
+          we use GDB commands for debugging (not \texttt{monitor resume}, etc)
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{OpenOCD over GDB (page 2)}
+  \vspace*{-5mm}
+  Set a breakpoint and trigger it:
+  \begin{lstlisting}[numbers=none]
+    ^C
+    (gdb) break do_sys_open
+    (gdb) continue
+
+    / # cat /proc/cmdline
+  \end{lstlisting}
+  \begin{enumerate}
+    \item Stop CPU execution by pressing \texttt{Ctrl-C}
+    \item Set breakpoint for \texttt{do\_sys\_open()} kernel function (it's a
+          handler for \texttt{open()} syscall. Another interesting functions
+          would be \texttt{load\_module()}, \texttt{start\_kernel()}, etc
+    \item Continue CPU execution
+    \item Print \texttt{/proc/cmdline} file, so that \texttt{open()} is
+          triggered
+    \item Now we are in breakpoint, CPU is halted
+  \end{enumerate}
+  \vspace*{-5mm}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{OpenOCD over GDB (page 3)}
+  Investigate code in breakpoint:
+  \begin{lstlisting}[numbers=none]
+    (gdb) monitor cortex_a maskisr on
+    (gdb) continue
+    (gdb) ...
+    (gdb) bt, list, info registers, disas, step, print, ...
+    (gdb) monitor cortex_a maskisr off
+    (gdb) continue
+  \end{lstlisting}
+  \begin{enumerate}
+    \item Don't process interrupts when stepping (otherwise we won't be
+          able to perform \texttt{continue})
+    \item Wait for \texttt{open("/proc/cmdline")}
+    \item Investigate caught code
+    \item Once we are done, enable interrupts processing and continue normal
+          execution
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{OpenOCD Telnet Commands}
+  In Telnet, you can use regular OpenOCD monitor commands:
+  \begin{itemize}
+    \item help
+    \item reset
+    \item halt
+    \item resume
+    \item reg
+    \item bp <address> <len> [hw]
+    \item step [address]
+    \item mdw, mww
+  \end{itemize}
+  See \textbf{OpenOCD User's Guide} for details.
+\end{frame}
+
+\subsection{XDS100v2}
+
+\begin{frame}[standout]
+  XDS100v2
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proprietary JTAG: XDS100v2 via CodeComposerStudio}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.32]{images/uboot-jtag.png}
+  \end{figure}
+  \vspace*{-10mm}
+\end{frame}
+
+%\begin{frame}
+%  \frametitle{XDS100v2 JTAG: Video}
+%\includemedia[width=0.95\linewidth,height=0.534\linewidth,activate=pageopen,
+%passcontext,
+%transparent,
+%addresource=materials/kernel-jtag-ccs.avi,
+%flashvars={source=materials/kernel-jtag-ccs.avi}
+%]{\includegraphics[width=0.6\linewidth]{images/kernel-jtag-ccs.png}}{VPlayer.swf}
+%  \vspace*{-10mm}
+%\end{frame}
+
+\begin{frame}[standout]
+  \frametitle{Demo}
+  JTAG Demo \#1: Flyswatter2
+\end{frame}
+
+\begin{frame}[standout]
+  \frametitle{Demo}
+  JTAG Demo \#2: XDS560v2
+\end{frame}
+
+\begin{frame}
+  \frametitle{JTAG References}
+  \begin{itemize}
+    \item \url{https://www.tincantools.com/flyswatter2-beaglebone-black-how-to/}
+    \item \url{https://e2e.ti.com/support/embedded/linux/f/354/t/363421}
+    \item \url{https://www.tincantools.com/beaglebone-black-eclipse-gdb/}
+    \item \url{https://devel.rtems.org/wiki/Debugging/OpenOCD/BeagleBoneBlack}
+    \item \url{https://elinux.org/Debugging\_The\_Linux\_Kernel\_Using\_Gdb}
+    \item \url{https://github.com/n-aizu/freertos-multicore/wiki/Debugging-with-openocd}
+    \item \url{http://openocd.org/doc/html/GDB-and-OpenOCD.html}
+    \item \url{http://openocd.org/doc/html/General-Commands.html}
+    \item \url{https://habr.com/post/206036/}
+  \end{itemize}
+  \vspace*{-10mm}
+\end{frame}
+
+\begin{frame}[standout]
+  Thank you!
+\end{frame}
+
+\end{document}

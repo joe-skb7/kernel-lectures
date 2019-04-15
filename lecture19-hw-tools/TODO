@@ -1,0 +1,53 @@
+Add theoretical info about JTAG interface/bus/protocol.
+
+
+assignment: practicum for binutils commands:
+  - objdump (-S, -D)
+  - nm (-S)
+  - addr2line
+  - strings
+  - hexdump -C
+
+static functions can be inlined
+optimizations...
+
+- parse kernel panic/oops backtrace
+
+(see GL JIRA and my old lectures for similar assignment for my trainees)
+
+---------------
+
+Root cause analysis. Show on example. See mail from Ivan Shabalow for example
+(and which questions I asked him).
+
+-----------------
+
+https://www.allaboutcircuits.com/technical-articles/getting-started-with-openocd-using-ft2232h-adapter-for-swd-debugging/
+
+-----------------
+
+«adapter_khz 16000» виглядає дивно, втім, OOCD скине на найближчу нижню доступну, він там десь про це каже.
+
+Дивно тому, що для старих FT2232C/L/D максимальна частота 6 МГц, а далі сітка 6/n.
+FT2232H працює або в режимі сумісності з частотами 6MHz/n (точніше, 12MHz/n/2, щоб був гарантований 50% clk),
+або у «швидкому» режимі з частотами 30MHz/n, тоді доступні 30, 15, 10, ...
+Тут сторінка 20
+http://www.ftdichip.com/Support/Documents/AppNotes/AN_108_Command_Processor_for_MPSSE_and_MCU_Host_Bus_Emulation_Modes.pdf
+
+-----------------
+
+p.s. По осцилографу — я перемикач x1 <-> x10 розглядаю навпаки:
+x10 для нормальної роботи, а x1 для слабких сигналів.
+
+При x1 там ємність вхідна дуже велика — десь 15..30 пФ вхідна ємність осцилографа
+(менша у дорожчих) і 80..120 пФ ємність власне кабеля. Та ще підлаштовувальний
+конденсатор у коректорі АЧХ щупа додасть трохи.
+У результаті все разом може бути 120 і більше пікофарад, залежно від виробника
+і класу щупа.
+При ~30-50k внутрішньому pull-up в мікроконтролері/SoC ці 120 пФ дають 4-6 мікросекунд
+постійної часу, ото на I2C завали страшні і були.
+
+Щуп x10 ділить і цю ємність, в такому режимі зазвичай вхідна ємність щупа
+близько 15 пФ і його вплив сильно зменшується.
+
+------------------

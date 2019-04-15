@@ -1,0 +1,115 @@
+Lecture name: not debugging, but smth like:
+
+    "Hardware Tools in Embedded Kernel Development"
+
+
+multimeter
+----------
+
+[Device: UNI-T UT51]
+
+- how to measure consumed current
+  - can be used to improve power management
+  - show connection scheme
+- how to measure voltage (3.3v, 5v)
+  - can be used to bring up the board or for diagnostic
+
+
+scope
+-----
+
+[Device: UNI-T UTD2052-CL]
+50 MHz, 500 MS/s
+probes: PP-80, 60 MHz
+
+Overview:
+  -  https://habr.com/post/373673/
+     https://www.youtube.com/watch?v=jJGoiSRHc4U
+  - Rigol/UNIT is better than some PC/software scope: freq, conveniency
+  - scope params: freq, MSamples/sec (+probes, capacity)
+  - coupling: DC
+  - divisors: on probe and in scope settings
+  - scale: time, voltage (for each channel)
+  - channels: enable/disable, settings
+  - common ground for both probes:
+    http://www.electroclub.info/article/oscillograf.htm
+    - caution: don't burn your scope, connect to one single ground
+    - it's enough to connect only one probe to GND
+  - buttons: "Auto", "Run/Stop"
+  - synchronize with periodic signals ("Auto" button)
+  - "trigger" input
+  - measure mode
+
+Examples:
+ - button bouncing
+ - measuring delay between button/LED (hw3.ko module)
+   - show how to use Trigger
+   - it shows us that it takes time for kernel to get to interrupt
+     and enable LED
+   - we can use this technique for performance optimizations and bug fixing,
+     as sometimes it's can't be done in software with such a precision
+ - showing jitter for square wave from kernel module (GPIO + sleep)
+   (thing of SQW as bit-banged PWM with duty_cycle = 50%)
+   - use dd in 4 threads to load CPU
+   - here we can see that sleep is not always precise
+     - hence for bit-banging it's better to disable interrupts and use delays
+       (if precise timings are needed)
+   - we can use this technique to explore periodic signals parameters
+     (like clock signal, during board bring-up)
+ - using trigger
+   - if event is on channel #1 or #2, no need to connect trigger probe
+   - +hwobs?
+   - for interrupt maybe?
+   - catch I2C transmission (i2c module); explain that it's hard to parse,
+     better to use LA
+
+
+logical alalyzer
+----------------
+
+[Device: Saleae Logic16]
+100 MHz, 16 lines
+
+- good for debugging and reverse engineering
+- show I2C signals sniffing (on my I2C module)
+- show UART (serial console) sniffing
+
+
+JTAG
+----
+
+[Device: TinCan Tools "Flyswatter 2"]
+Based on FT2232H chip, OpenOCD compatible, suitable for ARMv7 (Cortex-A8 etc)
+
+Part 1:
+- show JTAG connector on scheme
+- explain about RESET line (JTAG holds it on startup)
+- JTAG clocks the CPU, that's why we can debug it like user-space app
+- DEBUGSS clock must be enabled! check in kernel (dts for am335?)
+  - apply kernel patch for debugss clock
+- explain cfg files: srst and trst, etc
+- run openocd (use my script)
+- run "telnet localhost 4444" and show basic commands
+Part 2:
+- build kernel with CONFIG_DEBUG_INFO=y
+- run GDB:
+
+      $ arm-linux-gnueabihf-gdb vmlinux
+
+      (gdb) target remote localhost:3333
+      (gdb) monitor reset halt
+      (gdb) load
+      (gdb) continue
+
+- do not load vmlinux, just "continue"/"resume" (U-Boot loads kernel correctly,
+  with device tree, RAM, etc)
+
+
+
+
+phidget
+-------
+
+[Device: Phidget 1014_2B]
+4 relays
+

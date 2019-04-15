@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 64 64"
+   style="enable-background:new 0 0 64 64;"
+   xml:space="preserve"
+   sodipodi:docname="Circle-icons-submarine-orange-teal.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"><metadata
+   id="metadata3844"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs3842" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1440"
+   inkscape:window-height="871"
+   id="namedview3840"
+   showgrid="false"
+   inkscape:zoom="9.90625"
+   inkscape:cx="5.2467716"
+   inkscape:cy="32"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Layer_1" />
+<style
+   type="text/css"
+   id="style3817">
+	.st0{display:none;fill:#2B3544;}
+	.st1{fill:#4F5D73;}
+	.st2{fill:#F5CF87;}
+	.st3{fill:#E0995E;}
+	.st4{opacity:0.2;fill:#231F20;}
+</style>
+<rect
+   x="-223"
+   y="-1681"
+   class="st0"
+   width="608"
+   height="1984"
+   id="rect3819" />
+<circle
+   class="st1"
+   cx="32"
+   cy="32"
+   r="32"
+   id="circle3821"
+   style="fill:#007373;fill-opacity:1" />
+<path
+   class="st2"
+   d="M44.2,26.6c0,0-3.9-6.6-5.6-6.6h-9.2c-1.7,0-5.6,6.6-5.6,6.6l0,0c0,3.1,0.8,4.6,2.5,4.6h15.3  C43.3,31.2,44.2,29.7,44.2,26.6L44.2,26.6z"
+   id="path3823"
+   style="fill:#ffaa55;fill-opacity:1" />
+<path
+   class="st2"
+   d="M20.8,38.3c0,0,4,6.6,5.8,6.6h15.7c1.7,0,5.8-6.6,5.8-6.6l0,0c0-3.1-0.9-4.6-2.6-4.6h-22  C21.7,33.7,20.8,35.2,20.8,38.3L20.8,38.3z"
+   id="path3825"
+   style="fill:#ffaa55;fill-opacity:1" />
+<path
+   class="st3"
+   d="M16,36c0,1.1-2.9,6-4,6l0,0c-1.1,0-2-0.9-2-2V26c0-1.1,0.9-2,2-2l0,0c1.1,0,4,4.9,4,6V36z"
+   id="path3827"
+   style="fill:#cc7722;fill-opacity:1" />
+<path
+   class="st4"
+   d="m 56,35 c 0,-5.5 -8.8,-9 -21,-9 -12.2,0 -27,7.3 -27,9 0,1.6 14.8,9 27,9 12.2,0 21,-3.5 21,-9 z"
+   id="path3829"
+   style="opacity:0.35;fill:#775522;fill-opacity:1"
+   inkscape:connector-curvature="0" />
+<path
+   class="st2"
+   d="M56,33c0-5.5-8.8-9-21-9S8,31.3,8,33c0,1.6,14.8,9,27,9S56,38.5,56,33z"
+   id="path3831"
+   style="fill:#ffaa55;fill-opacity:1" />
+<circle
+   class="st3"
+   cx="36"
+   cy="32"
+   r="3"
+   id="circle3833"
+   style="fill:#cc7722;fill-opacity:1" />
+<circle
+   class="st3"
+   cx="46"
+   cy="32"
+   r="3"
+   id="circle3835"
+   style="fill:#cc7722;fill-opacity:1" />
+<circle
+   class="st3"
+   cx="26"
+   cy="32"
+   r="3"
+   id="circle3837"
+   style="fill:#cc7722;fill-opacity:1" />
+</svg>

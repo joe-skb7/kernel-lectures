@@ -1,0 +1,7 @@
+/* i2c2_pins are already muxed, i2c2.status is okay, driver is built-in */
+&i2c2 {
+	ds1307x: ds1307x@68 {
+		compatible = "dallas,ds1307x";
+		reg = <0x68>;
+	};
+};

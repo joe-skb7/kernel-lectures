@@ -1,0 +1,15 @@
+&am33xx_pinmux {
+	hw_pins: hw_pins {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x82c, PIN_INPUT | MUX_MODE7)		/* gpmc_ad11.gpio0_27 */
+			AM33XX_IOPAD(0x83c, PIN_OUTPUT | MUX_MODE7)		/* gpmc_ad15.gpio1_15 */
+		>;
+	};
+};
+
+/ {
+	soc {
+		pinctrl-names = "default";
+		pinctrl-0 = <&hw_pins>;
+	};
+};

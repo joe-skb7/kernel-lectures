@@ -1,0 +1,87 @@
+TODO remains:
+ - add note (right after scheme) about internal pull-up to 3.3V
+   - and about another changes to scheme (crystal soldered to GND etc)
+ - write my own RTC driver and test
+ - why the module probes OK and read finishes OK when I2C device is not
+   connected? how to handle it in driver?
+ - LIR2032 are rechargeable, CR2032 are not
+   - 200R resistor = 25 mA current, it's quite big! battery can explode!
+   - remove the battery, and maybe de-solder divider resistors; also check:
+     https://forum.arduino.cc/index.php?topic=177297.15
+     https://forum.arduino.cc/index.php?topic=177297.30
+     https://electronics.stackexchange.com/questions/98361/how-to-modify-ds1307-rtc-to-use-3-3v-for-raspberry-pi
+     https://www.banggood.com/Tiny-RTC-I2C-AT24C32-DS1307-Real-Time-Clock-Module-Board-For-Arduino-images-p90137-q19492.html
+   - in assignments: don't ask to check w/o power
+ - to_i2c_client() function
+ - read all registers in one operation: i2c_smbus_read_i2c_block_data()
+ - struct rtc_time: how to fill (see Oleksandr Redchuk module
+ - use devm_rtc_device_register() instead of devm_rtc_allocate_device() ???
+   or no?
+
+
+
+- see TODO.d/*
+  - also see https://www.kernel.org/doc/Documentation/i2c/summary
+  - also see https://www.linuxjournal.com/article/7136
+- sync/async buses (+picture)
+- picture for serial/parallel buses
+- mention .detect for I2C + discoverability (check in kernel drivers)
+- mention clock stretching
+
+
+## Section 1: I2C Intro ##
+
+- Embedded communication: SPI, I2C, USB, PWM, IIO
+- peripheral (buses) in AM335
+- I2C basics
+- I2C protocol details: master/slave, etc.
+- I2C addresses (check dts for existing I2C device); conflicts
+- https://learn.sparkfun.com/tutorials/i2c
+- discoverable or non-discoverable?
+- what types of I2C devices exist?
+  - I2C I/O expanders
+- Corresponding kernel frameworks (+ serdev, +IIO)
+
+## Section 2: Connecting device ##
+
+- electronics concerns?
+- i2c module scheme: removed resistors, etc
+- what is datasheet?
+
+## Section 3: Kernel ##
+
+- bit-bang impl. in kernel
+- I2C_M_NOSTART etc (for raw API)
+- Why there is no spi_bus in kernel, but there is bus for i2c? // probe() can be done, discoverable bus
+- kernel is good source of examples
+  - show git grep command to find spi drivers
+- Documentation/i2c/writing-clients
+- I2C: SMBus, I2C raw API, I2C drivers
+- device matching, device tree, bindings
+- how to write simple I2C driver and definition
+- regmap (see drivers: mpu6050, bmp280)
+- bit-banging (GPIO); example: no I2C IP-core or non-standard I2C (see TM1637)
+- bit-banged I2C: what is it, where in kernel
+- I2C bus driver (I2C controller driver): dts, compatible, driver, frameworks, ...
+     this is what allows us to write arch-independent (cross-platform) drivers
+- /mnt/storage/Work/meaa/repos/kernel-meaa$ git log --oneline -S'transfer' --author=Protsenko
+- explain about binding documentation
+- hwclock, using our /dev/rtc file
+- show conflict logs
+
+datasheet references: how we connected, address, registers
+
+## Section 4: Workshop ##
+
+- user-space tools for I2C
+- workshop: connect, test from userspace,
+
+
+
+## Assignment ##
+
+- assignment: write simple driver using datasheet
+- [advanced] find and use existing driver; read it and understand
+- [advanced] LED dynamic indication:
+  I2C_M_NOSTART:
+  https://stackoverflow.com/questions/35078131/why-repeated-start-based-i2c-operation-are-not-supported-in-linux?lq=1

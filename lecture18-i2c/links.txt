@@ -1,0 +1,10 @@
+Push-pull / open-drain
+======================
+
+https://embeddedartistry.com/blog/2018/6/4/demystifying-microcontroller-gpio-settings
+
+https://e2e.ti.com/support/arm/sitara_arm/f/791/t/293683?AM335X-Open-drain-pin-question
+
+https://www.edaboard.com/showthread.php?97365-question-push-pull-or-open-drain-mode
+
+https://www.kernel.org/doc/Documentation/devicetree/bindings/i2c/i2c-mux-pinctrl.txt

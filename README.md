@@ -8,6 +8,8 @@ Black bring up.
 
 ## Build dependencies
 
+Next packages have to be installed before building kernel lectures:
+
 - fonts-fira (FiraSans fonts)
 - python-pygments
 - rubber
@@ -18,6 +20,22 @@ Black bring up.
 - texlive-latex-recommended
 - texlive-luatex
 - texlive-xetex
+
+For `fonts-fira` you can build and install deb-package from
+[https://github.com/joe-skb7/pkg-fonts-fira](here):
+
+```
+$ sudo dpkg -i fonts-fira*.deb
+```
+
+Other packages can be installed from Debian/Ubuntu repo:
+
+```
+$ sudo apt update
+$ sudo apt install python-pygments rubber texlive-common texlive-fonts-extra \
+                   texlive-fonts-recommended texlive-latex-extra \
+                   texlive-latex-recommended texlive-luatex texlive-xetex
+```
 
 ## Build instructions
 

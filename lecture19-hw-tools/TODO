@@ -1,5 +1,8 @@
-Add theoretical info about JTAG interface/bus/protocol.
+Replace all "Demo" sections with corresponding animated GIFs/videos/screencasts.
 
+Add my video for proprietary JTAG usage into handout materials.
+
+Add theoretical info about JTAG interface/bus/protocol.
 
 assignment: practicum for binutils commands:
   - objdump (-S, -D)

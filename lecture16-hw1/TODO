@@ -1,24 +1,13 @@
 - + assignment: find and use existing drivers (gpio-leds, gpio-keys):
                 instead of hw2.c driver
 - + PWM on LED (at least existing driver)
-
-- remove "just apt install it": must be cross-compiled and added to rootfs
-
-
 - tell about BBB capes and why we are not using them
 - LED + PWM
-- gpio-leds driver
 - show used kernel API (ioremap, gpio, of_, platform driver, char device, etc)
   (appendix)?
 - Add slide with electrical components (symbol + photo + name)?
-- Split this lecture into 2 lectures:
-    1. Till attempt #3, + workshop (build device) + homework: test it works
-    2. Attempt #3, userspace, etc. Homework: keypad
-- I_f = I_LED
 - Revise commands in appendix A
 - Add by-line explanation for each driver? Or just show it via vim?
-- For attempt #1: mention possible race condition for GPIO set
-  (or use atomic set/clear registers instead)
 - Add references (LDD3, Bootlin slides, related kernel documentation)
 - Add clock introspection
 - Add prerequisites: bring BBB and laptop
@@ -36,5 +25,4 @@
 - If split into 2 lectures: probably add input_dev API and ask students to
   report found key to linux (in assignment)
 - After split: add GPIO user-space API (old, new) and GPIO internals to the
-  first lecture, and all code move to second lecture
-
+  first lecture, and move all code to the second lecture

@@ -13,7 +13,7 @@
 \hypersetup{colorlinks,allcolors=.,urlcolor=blue}
 
 \title{Linux Kernel Training: Lecture 2}
-\subtitle{Booting the BeagleBone Black}
+\subtitle{Booting the \textsc{BeagleBone Black}}
 \date{\today}
 \author{Sam Protsenko}
 \institute{GlobalLogic}
@@ -186,15 +186,16 @@
   To unbrick the board (bad U-Boot on eMMC):
   \begin{itemize}
   \item Boot from SD card and re-flash
-  \item Use JTAG
+  \item YMODEM boot (via UART)
   \item USB peripheral boot
+  \item Use JTAG
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{U-Boot Shell}
   \begin{itemize}
-  \item U-Boot is a ``monitor'' program
+  \item U-Boot has a ``monitor'' program
   \item Command line interface
   \item A set of commands is implemented
   \item Resembles Bash (has scripting capabilities)
@@ -497,7 +498,7 @@ make ARCH=arm SUBARCH=omap2 cscope tags
 \begin{frame}
   \frametitle{Hardware Equipment}
   \begin{itemize}
-    \item \textbf{The board}: BeagleBone Black Rev C
+    \item \textbf{The board}: \textsc{BeagleBone Black} (Rev C)
     \item \textbf{Serial cable}: TTL-232R-3V3
     \item \textbf{OTG USB cable}: mini-USB to USB
     \item \textbf{micro-SD card + adapter}: 8 GB, class 10
@@ -530,7 +531,9 @@ make ARCH=arm SUBARCH=omap2 cscope tags
 
 \begin{frame}
   \frametitle{Connectivity: Overview}
-  \alert{Don't do this just yet!}
+
+  \alert{Now we are going to:}
+
   \begin{itemize}
   \item Connect mini-USB cable
     \begin{itemize}
@@ -552,7 +555,7 @@ make ARCH=arm SUBARCH=omap2 cscope tags
     \begin{figure}
       \centering
       \includegraphics[scale=0.5]{images/bbb-serial.png}
-      \caption{BeagleBone Black serial connection}
+      \caption{\textsc{BeagleBone Black} serial connection}
     \end{figure}
     \column{0.5\textwidth}
     \begin{figure}
@@ -587,7 +590,7 @@ make ARCH=arm SUBARCH=omap2 cscope tags
   \begin{figure}
     \centering
     \includegraphics[scale=0.4]{images/bbb-otg.png}
-    \caption{BeagleBone Black USB connection}
+    \caption{\textsc{BeagleBone Black} USB connection}
   \end{figure}
 \end{frame}
 
@@ -788,7 +791,7 @@ $ sudo umount /mnt/rootfs
 \begin{frame}
   \frametitle{Abbreviations}
   \begin{itemize}
-    \item BBB - BeagleBone Black
+    \item BBB - \textsc{BeagleBone Black}
     \item DFU - Device Firmware Upgrade
     \item DTB - Device Tree Blob
     \item eMMC - Embedded MMC (MultiMedia Card)

@@ -1,11 +1,9 @@
-- more bold red ellipse over serial console pin header
 - figure with environment: show environment loading from eMMC too
-- add "load" to U-Boot commands list
-- remove "Don't do this just yet" (?)
 
 
 - ~/.vimrc, ~/.bashrc: setting up BBB environment (cdw, etc)
 - add slide/slides about editenv, printenv, multi-line commands, Ctrl-A, W
 - add slide about possibility of ttyUSB1/2/... instead of ttyUSB0
 - add slide about bootcmd (setting it to nfs boot by default)
+- add slide about ramdisk
 - https://git.bootlin.com/training-materials/

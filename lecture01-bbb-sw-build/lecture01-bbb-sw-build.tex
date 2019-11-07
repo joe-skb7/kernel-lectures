@@ -13,7 +13,7 @@
 \hypersetup{colorlinks,allcolors=.,urlcolor=blue}
 
 \title{Linux Kernel Training: Lecture 1}
-\subtitle{Building the Software for BeagleBone Black}
+\subtitle{Building the Software for \textsc{BeagleBone Black}}
 \date{\today}
 \author{Sam Protsenko}
 \institute{GlobalLogic}
@@ -34,9 +34,9 @@
 \begin{frame}
   \frametitle{Linux Kernel ProCamp Details}
   \begin{itemize}
-  \item Tue/Fri, 10 am - 12 pm
-  \item Schedule: \url{https://docs.google.com/spreadsheets/d/16dcTo2irL5ZUQTrBJF7Kjia8v-J--IezS5GyD0MPB74/edit?usp=sharing}
-  \item Target: BeagleBone Black and QEMU
+  \item Tue/Fri, 9 am - 11 pm
+  \item Schedule: \url{https://docs.google.com/spreadsheets/d/16dcTo2irL5ZUQTrBJF7Kjia8v-J--IezS5GyD0MPB74/edit\#gid=129771073}
+  \item Target: \textsc{BeagleBone Black} and QEMU
   \item Host: Personal laptop (Ubuntu 18.04) or Training Centre PC
   \item Training Centre PC:
     \begin{itemize}
@@ -53,10 +53,11 @@
   \begin{itemize}
   \item Sam Protsenko \href{mailto:semen.protsenko@globallogic.com}{<semen.protsenko@globallogic.com>}
   \item Andrii Tymkiv \href{mailto:andrii.tymkiv@globallogic.com}{<andrii.tymkiv@globallogic.com>}
-  \item Stepan Strogin \href{mailto:stepan.strogin@globallogic.com}{<stepan.strogin@globallogic.com>}
   \item Vitaliy Vasylskyy \href{mailto:vitaliy.vasylskyy@globallogic.com}{<vitaliy.vasylskyy@globallogic.com>}
   \item Illia Smyrnov \href{mailto:illia.smyrnov@globallogic.com}{<illia.smyrnov@globallogic.com>}
   \item Ruslan Bilovol \href{mailto:ruslan.bilovol@globallogic.com}{<ruslan.bilovol@globallogic.com>}
+  \item Andrii Lukin \href{mailto:andrii.lukin@globallogic.com}{<andrii.lukin@globallogic.com>}
+  \item Oleksii Kurochko \href{mailto:oleksii.kurochko@globallogic.com}{<oleksii.kurochko@globallogic.com>}
   \end{itemize}
 \end{frame}
 
@@ -158,9 +159,9 @@
     \item Consult with \texttt{README} and \texttt{INSTALL}
     \item Install all build dependencies
     \item Configure shell environment for cross-compiling
-    \item Configure the software for build with options you desire
-    \item Build the software
-    \item Install/flash the built software
+    \item \textbf{Configure the software for build with options you desire}
+    \item \textbf{Build the software}
+    \item \textbf{Install/flash the built software}
   \end{enumerate}
 \end{frame}
 
@@ -696,7 +697,7 @@ mdev -s
       \end{itemize}
     \item Using schematic, figure out:
       \begin{itemize}
-        \item Which pins (pads) user LEDs are connected to
+        \item Which pins (pads) the user LEDs are connected to
         \item How to mux those pins for GPIO (use datasheet and TRM)?
         \item Which registers to use for pin muxing and then blinking some LED?
       \end{itemize}
@@ -706,7 +707,7 @@ mdev -s
 \section*{References}
 
 \begin{frame}
-  \frametitle{References}
+  \frametitle{Recommended Reading}
   \begin{thebibliography}{}
   \setbeamertemplate{bibliography item}[book]
     \bibitem{Embedded2008}
@@ -715,6 +716,9 @@ mdev -s
     \bibitem{Linux2014}
       Brian Ward.
       \newblock \emph{How Linux Works}, 2nd Edition.
+    \bibitem{ARM}
+      Andrew N. Sloss and others.
+      \newblock \emph{ARM System Developer's Guide}.
     \bibitem{LKD3}
       Robert Love.
      \newblock \emph{Linux Kernel Development}, 3rd Edition.

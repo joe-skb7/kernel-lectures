@@ -1,5 +1,3 @@
-- make "BeagleBone Black" in caps (like in lecture 2)
-- add ARM book to references
-- rename References to Recommended Reading
 - add slide about Cortex family and ARMv7 arch
 - there are Cortex-A and Cortex-M toolchains
+- note: do not setup toolchains in ~/.bashrc

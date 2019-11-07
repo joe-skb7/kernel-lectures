@@ -748,10 +748,11 @@ int gpio_get_value(unsigned gpio);
 
 \begin{frame}
   \frametitle{Assignment 1 (mandatory)}
+  \underline{Try out everything we discussed today}:
   \begin{itemize}
-    \item Assemble LED + button device on the breadboard
-    \item Build and run provided module \#1 (make sure device works)
-    \item Build and run provided module \#2 (make sure device works)
+    \item Assemble ``LED + button'' device on the breadboard
+    \item Build and run provided module \#1 (make sure the device works)
+    \item Build and run provided module \#2 (make sure the device works)
     \begin{itemize}
       \item Apply provided patch for \texttt{.dts} file (in kernel)
       \item Rebuild \texttt{.dtb} file for BBB
@@ -762,9 +763,71 @@ int gpio_get_value(unsigned gpio);
 \end{frame}
 
 \begin{frame}
-  \frametitle{Assignment 2 (advanced)}
+  \frametitle{Assignment 2}
+  \underline{Find out and use existing drivers in the kernel}:
   \begin{itemize}
-    \item Create minimal user-space driver (in C) using
+    \item Look for \texttt{gpio-leds} and \texttt{gpio-keys} drivers in
+          \texttt{Documentation/devicetree/bindings/}
+    \item Try to use those drivers instead of \texttt{hw1.ko} / \texttt{hw2.ko}
+          from this lecture
+    \item Manage to handle button and LED in user space
+    \item How to use PWM module to control LED brightness?
+    \begin{itemize}
+      \item Which pin to connect LED to?
+      \item How to mux that pin for PWM mode?
+      \item How to enable PWM module in device tree?
+      \item Now how to control the LED brightness from user space? (sysfs)
+      \item Which existing driver can be used to control the LED brigtness via
+            PWM from device tree? Try to use it.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Assignment 3}
+  \underline{Figure out how \texttt{ioremap()} actually works}:
+  \begin{itemize}
+    \item Examine \texttt{Documentation/arm/memory.rst}:
+    \begin{itemize}
+      \item At which addresses \texttt{ioremap()} mappings are stored?
+      \item Which function is used to prepare \textit{static mappings}?
+    \end{itemize}
+    \item Figure out how static mappings are being set up (hint: look where
+          the function mentioned in Documentation is being called from
+          (from \texttt{arch/} code)? what's passed to that function from
+          there?)
+    \item Which physical addresses are being statically mapped?
+    \item What are the corresponding virtual addresses (calculate manually)?
+    \item Look at AM335x TRM, section 2 ``Memory Map'': which hardware modules
+          can be accessed via those statically mapped addresses in kernel?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Assignment 3 (cont'd)}
+  \begin{itemize}
+    \item Where is that function (from \texttt{arch/}) used? It's set to some
+          callback field in some struct. Provide the file path (it's actually
+          a \textit{board file}).
+    \item What does ``static mapping'' mean? Use \texttt{git blame} on the
+          function mentioned in Documentation and read commit messages for found
+          commits to get more info. Also Google for it.
+    \item Does \texttt{ioremap()} actually creates new MMU mapping in page table
+          when you call it, passing some GPIO register address?
+    \item Can we avoid using \texttt{ioremap()} in \texttt{hw1.ko}? Why is that
+          possible?
+    \item Why it's incorrect to use \texttt{ioremap()} for system memory
+          (regular RAM)?
+  \item Trace \texttt{ioremap()} function call as deep as possible, using your
+        IDE capabilities (for BBB architecture)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Assignment 4}
+  \underline{Implement user space GPIO driver for our device}
+  \begin{itemize}
+    \item Create minimal user space driver (in C) using
           \texttt{/dev/gpiochip*} char devs
       \begin{itemize}
         \item Toggle the LED on button press while your app is running
@@ -775,7 +838,7 @@ int gpio_get_value(unsigned gpio);
         \item Examples: \texttt{tools/gpio/*}
       \end{itemize}
     \item It's even better to use \texttt{libgpiod} (you'll have to
-          cross-compile it for ARM, as well as your app)
+          cross-compile it for ARM)
     \item Don't use GPIO sysfs interface, it's obsolete
     \item Send me all source files
     \item \textbf{NOTE}: User-space GPIO interface is useful for makers, but

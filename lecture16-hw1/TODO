@@ -1,8 +1,4 @@
-- + assignment: find and use existing drivers (gpio-leds, gpio-keys):
-                instead of hw2.c driver
-- + PWM on LED (at least existing driver)
 - tell about BBB capes and why we are not using them
-- LED + PWM
 - show used kernel API (ioremap, gpio, of_, platform driver, char device, etc)
   (appendix)?
 - Add slide with electrical components (symbol + photo + name)?

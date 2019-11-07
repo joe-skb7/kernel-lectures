@@ -767,15 +767,15 @@ int gpio_get_value(unsigned gpio);
     \item Create minimal user-space driver (in C) using
           \texttt{/dev/gpiochip*} char devs
       \begin{itemize}
-        \item Toggle LED on button press while your app is running
+        \item Toggle the LED on button press while your app is running
       \end{itemize}
     \item Look here for insights:
       \begin{itemize}
         \item Syscall interface: \texttt{Documentation/ABI/testing/gpio-cdev}
         \item Examples: \texttt{tools/gpio/*}
       \end{itemize}
-    \item It's even better to use \texttt{libgpiod} (just
-          ``\texttt{apt install}'' it)
+    \item It's even better to use \texttt{libgpiod} (you'll have to
+          cross-compile it for ARM, as well as your app)
     \item Don't use GPIO sysfs interface, it's obsolete
     \item Send me all source files
     \item \textbf{NOTE}: User-space GPIO interface is useful for makers, but

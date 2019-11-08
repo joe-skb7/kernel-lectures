@@ -735,13 +735,26 @@ int gpio_get_value(unsigned gpio);
 
 \begin{frame}
   \frametitle{Shortcomings}
-  Somewhat better, but still has its pitfalls:
-  \begin{itemize}
-    \item GPIO lines are still hard-coded in driver
-    \item Obsolete legacy GPIO API
-    \item Referencing pinctrl from \texttt{soc} node is hacky
-    \item Still no user space interface
-  \end{itemize}
+  \begin{columns}
+    \column{0.4\textwidth}
+      Somewhat better, but still has its pitfalls:
+      \begin{itemize}
+        \item GPIO lines are still hard-coded in driver
+        \item Obsolete legacy GPIO API
+        \item Referencing pinctrl from \texttt{soc} node is hacky
+        \item Still no user space interface
+      \end{itemize}
+    \column{0.6\textwidth}
+      Those two examples can still be useful:
+      \begin{itemize}
+        \item To check some idea fast (experiments)
+        \item When implementing some low-level driver (like GPIO platform
+              driver)
+        \item It shows how to use TRM and schematics
+        \item It's useful to see the evolution (how frameworks appeared)
+        \item To know what to avoid in production
+      \end{itemize}
+  \end{columns}
 \end{frame}
 
 \section{Assignments}

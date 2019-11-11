@@ -1,24 +1,11 @@
-- tell about BBB capes and why we are not using them
-- show used kernel API (ioremap, gpio, of_, platform driver, char device, etc)
-  (appendix)?
 - Add slide with electrical components (symbol + photo + name)?
-- Revise commands in appendix A
-- Add by-line explanation for each driver? Or just show it via vim?
 - Add references (LDD3, Bootlin slides, related kernel documentation)
-- Add clock introspection
 - Add prerequisites: bring BBB and laptop
 - Split attempt #3 (at least) into logical chunks: pm, registering, ioctl, etc.
 - Add info about GPIO controller driver (device tree, driver, compatible,
   kernel frameworks for that, etc); this is what allows us to write
   architecture-independent (cross-platform) driver
 - Add interconnect explanation (benefitc vs conventional bus)?
-- Explain about binding documentation (related)
 - Add "Questions?" to "Thank you!" slide, like on my first lecture
 - Show GPIO controller driver, device tree, etc
   - that's how platform-independent GPIO API is done
-- Why only "scan" or only "read" pins are pulled-up on fig. 19-20? Should
-  pull-up all lines probably
-- If split into 2 lectures: probably add input_dev API and ask students to
-  report found key to linux (in assignment)
-- After split: add GPIO user-space API (old, new) and GPIO internals to the
-  first lecture, and move all code to the second lecture

@@ -188,9 +188,9 @@
   \frametitle{API: miscdevice}
   \begin{itemize}
     \item \texttt{miscdevice} = Miscellaneous Character Device
-    \item Easier to implement than regular char dev
     \item Major number is the same for all misc devices (see
           \texttt{/proc/devices})
+    \item Easier to implement than regular char dev
   \end{itemize}
 
   \begin{lstlisting}[language=c,numbers=none]
@@ -213,8 +213,8 @@ void misc_deregister(struct miscdevice *misc);
 
   \begin{itemize}
   \item Similar set of functions as in ``Legacy GPIO API''
-  \item GPIO number is usually obtained from device tree
   \item Operates on \texttt{struct gpio\_desc} (instead of GPIO number)
+  \item GPIO descriptor is usually obtained from device tree
   \end{itemize}
 
   \begin{lstlisting}[language=c,numbers=none]

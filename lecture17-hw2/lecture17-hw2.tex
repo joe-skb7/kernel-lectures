@@ -557,17 +557,17 @@ int disable_irq_wake(unsigned int irq);
   \frametitle{Assignment 2 (cont'd)}
   \vspace*{-5mm}
   \begin{columns}
-    \column{0.6\textwidth}
+    \column{0.65\textwidth}
       \begin{figure}
         \centering
         \includegraphics[scale=0.23]{images/keypad-scan2.png}
-        \caption{Internal connections}
+        \caption{Using internal pull-ups}
       \end{figure}
-    \column{0.4\textwidth}
+    \column{0.35\textwidth}
       \begin{figure}
         \centering
         \includegraphics[scale=0.4]{images/keypad-scan1.png}
-        \caption{External connections (safe)}
+        \caption{Short circuit protection (external)}
       \end{figure}
   \end{columns}
   \vspace*{-10mm}
@@ -579,7 +579,7 @@ int disable_irq_wake(unsigned int irq);
     \column{0.5\textwidth}
       Initialization:
       \begin{itemize}
-        \item Pull-up all scan and read lines
+        \item Pull-up all lines (``scan'' and ``read'')
         \item Set all scan and read lines into input
         \item Configure debouncing on read lines
       \end{itemize}

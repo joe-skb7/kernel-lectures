@@ -1,7 +1,3 @@
-- Why only "scan" or only "read" pins are pulled-up on fig. 19-20? Should
-  pull-up all lines probably
-
-
 + assignment (optional): power management
 + assignment (optional): overlays
 

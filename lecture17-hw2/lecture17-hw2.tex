@@ -341,6 +341,44 @@ int disable_irq_wake(unsigned int irq);
   \textbf{\textcolor{green}{PRODUCTION READY!}}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Decisions Overview}
+  \begin{itemize}
+    \item Previous attempts are fine for experiments and low-level platform
+          drivers (e.g. GPIO controller driver)
+    \item For our device we have to use either:
+    \begin{itemize}
+      \item Special frameworks for device classes (like IIO, RTC, etc)
+      \item or generic kernel devices (char devs, block devs, etc)
+    \end{itemize}
+    \item We don't have any special frameworks in kernel for our device class
+    \item So we will use:
+    \begin{itemize}
+      \item Character device (misc): for user space interface
+      \item Platform device: for integration in device tree and PM ops
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Driver Features}
+  \begin{itemize}
+    \item User space interface (file operations):
+      \begin{itemize}
+        \item read: button state (0 or 1); blocking/non-blocking read
+        \item write: LED state (0 or 1)
+        \item poll: wait for button to be pressed
+        \item ioctl: \texttt{SETLED}, \texttt{GETLED}, \texttt{KERN\_CONTROL}
+      \end{itemize}
+    \item Proper integration with Device Tree
+    \item Power Management: button can wake up BBB from suspend
+    \item Button is handled via interrupt
+    \item Kernel can implement device's logic, or delegate it to user space
+    \item Handle multi-threading scenarios
+    \item Expose ioctl constants to user space
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[containsverbatim]
   \frametitle{Third Attempt: Device Tree}
   \lstinputlisting[caption=am335x-boneblack.dts]{materials/module3/dts.txt}

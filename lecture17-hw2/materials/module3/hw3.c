@@ -47,6 +47,7 @@ static ssize_t hw3_read(struct file *file, char __user *buf, size_t count,
 {
 	struct hw3 *hw3 = to_hw3_struct(file);
 	unsigned long flags;
+	unsigned long copy_len;
 	ssize_t ret;
 	const char *val;
 
@@ -64,11 +65,14 @@ static ssize_t hw3_read(struct file *file, char __user *buf, size_t count,
 	hw3->data_ready = false;
 	spin_unlock_irqrestore(&hw3->lock, flags);
 
+	/* Handle case when user requested 1 byte read */
+	copy_len = min(count, (size_t)READ_BUF_LEN);
+
 	/* Do not advance ppos, do not use simple_read_from_buffer() */
-	if (copy_to_user(buf, val, READ_BUF_LEN))
+	if (copy_to_user(buf, val, copy_len))
 		ret = -EFAULT;
 	else
-		ret = READ_BUF_LEN;
+		ret = copy_len;
 
 	return ret;
 }

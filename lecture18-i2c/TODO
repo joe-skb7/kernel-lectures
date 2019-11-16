@@ -1,16 +1,7 @@
 TODO remains:
- - add note (right after scheme) about internal pull-up to 3.3V
-   - and about another changes to scheme (crystal soldered to GND etc)
  - write my own RTC driver and test
  - why the module probes OK and read finishes OK when I2C device is not
    connected? how to handle it in driver?
- - LIR2032 are rechargeable, CR2032 are not
-   - 200R resistor = 25 mA current, it's quite big! battery can explode!
-   - remove the battery, and maybe de-solder divider resistors; also check:
-     https://forum.arduino.cc/index.php?topic=177297.15
-     https://forum.arduino.cc/index.php?topic=177297.30
-     https://electronics.stackexchange.com/questions/98361/how-to-modify-ds1307-rtc-to-use-3-3v-for-raspberry-pi
-     https://www.banggood.com/Tiny-RTC-I2C-AT24C32-DS1307-Real-Time-Clock-Module-Board-For-Arduino-images-p90137-q19492.html
    - in assignments: don't ask to check w/o power
  - to_i2c_client() function
  - read all registers in one operation: i2c_smbus_read_i2c_block_data()

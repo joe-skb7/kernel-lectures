@@ -15,17 +15,14 @@
 %\usepackage{soul}
 \usepackage[normalem]{ulem}
 \usepackage{hyperref}
-\hypersetup{colorlinks,allcolors=.,urlcolor=blue}
 \usepackage{siunitx}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{listings}
 \usepackage[normalem]{ulem}
+\hypersetup{colorlinks,allcolors=.,urlcolor=blue}
 
-% For tikz
-\colorlet{darkgreen}{OliveGreen}
-\colorlet{darkred}{BrickRed}
 % Not used
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -35,34 +32,6 @@
 \definecolor{comment}{RGB}{0,128,0} % dark green
 \definecolor{string}{RGB}{255,0,0}  % red
 \definecolor{keyword}{RGB}{0,0,255} % blue
-
-% Schematic elements colors
-\tikzset{
-  R/.append style={color=darkred, /tikz/text=black},
-  battery1/.append style={color=darkred, /tikz/text=black},
-  leDo/.append style={color=darkred, /tikz/text=black},
-  short/.append style={color=darkgreen, /tikz/text=black},
-  nos/.append style={color=darkred, /tikz/text=black},
-  every vcc node/.style={color=darkred, /tikz/text=black},
-  every ground node/.style={color=darkred, /tikz/text=black},
-  %%% Pin element definition (crossed-out box)
-  box/.style={
-    rectangle, minimum size=0.5 cm, very thick, draw=black, color=darkred
-  },
-  pin/.style={
-    box,
-    append after command={
-      [every edge/.append style={
-        very thick,
-        darkred,
-        shorten >=\pgflinewidth,
-        shorten <=\pgflinewidth,
-      }]
-      (\tikzlastnode.north west) edge (\tikzlastnode.south east)
-      (\tikzlastnode.north east) edge (\tikzlastnode.south west)
-    }
-  }
-}
 
 % Fix dashs/hyphens in listings
 \makeatletter
@@ -100,6 +69,7 @@
 
 \lstdefinestyle{c} {
   escapeinside=\`\`,
+  morekeywords={u8,u16,u32,s8,s16,s32,size_t, ssize_t},
 }
 
 \lstdefinestyle{make} {
@@ -363,6 +333,27 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{TinyRTC Module Changes}
+  \begin{itemize}
+    \item Remove module's I2C pull-up resistors (R2, R3)
+    \begin{itemize}
+      \item VCC = 5V in module
+      \item BBB I2C voltage for ``1'' is 3.3V
+      \item \alert{We'll use internal pull-ups to 3.3V for I2C lines}
+    \end{itemize}
+    \item Remove charging scheme (R5, D1)
+    \begin{itemize}
+      \item Modules have non-rechargeable batteries (CR2032) by mistake
+            (should have recharegeabe LIR2032 instead)
+      \item Also remove divider (R4, R6); connect battery directly to VBAT
+            instead
+    \end{itemize}
+    \item Crystal X1 is soldered to GND, to improve stability
+    \item Soldered pin header sockets, to ease the prototyping
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
   \frametitle{TinyRTC Module Connection}
   \begin{figure}
     \centering
@@ -484,8 +475,9 @@ to avoid rollover issues, the remaining time and date registers must be written 
     \item I2C core calls transfer callback from registered algorithm
     \item Callback leads to adapter driver transfer function
     \item Adapter driver initiates physical transfer on I2C bus
-    \item Data is obtained from device and passed back to user
+    \item Data is obtained from device and passed back to user space
   \end{enumerate}
+  \vspace*{-7mm}
 \end{frame}
 
 \begin{frame}[containsverbatim]
@@ -557,7 +549,7 @@ to avoid rollover issues, the remaining time and date registers must be written 
 
 \begin{frame}[containsverbatim]
   \frametitle{Plain I2C Communication}
-  \begin{lstlisting}
+  \begin{lstlisting}[style=c]
 int i2c_master_send(struct i2c_client *client, const char *buf, int count);
 int i2c_master_recv(struct i2c_client *client, char *buf, int count);
   \end{lstlisting}
@@ -574,7 +566,7 @@ int i2c_master_recv(struct i2c_client *client, char *buf, int count);
 
 \begin{frame}[containsverbatim]
   \frametitle{Plain I2C Communication (cont'd)}
-  \begin{lstlisting}
+  \begin{lstlisting}[style=c]
 int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num);
   \end{lstlisting}
   \begin{itemize}
@@ -609,7 +601,7 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msg, int num);
 \begin{frame}[containsverbatim]
   \frametitle{SMBus Communication (cont'd)}
   \vspace*{-5mm}
-  \begin{lstlisting}
+  \begin{lstlisting}[style=c]
 s32 i2c_smbus_read_byte(struct i2c_client *client);
 s32 i2c_smbus_write_byte(struct i2c_client *client, u8 value);
 s32 i2c_smbus_read_byte_data(struct i2c_client *client, u8 command);
@@ -647,7 +639,7 @@ s32 i2c_smbus_write_i2c_block_data(struct i2c_client *client, u8 command, u8 len
 
 \begin{frame}[containsverbatim]
   \frametitle{regmap API}
-  \begin{lstlisting}
+  \begin{lstlisting}[style=c]
 #include <linux/regmap.h>
 
 struct regmap_config {
@@ -690,7 +682,7 @@ int regmap_update_bits(struct regmap *map, unsigned int reg,
 
 \begin{frame}[containsverbatim]
   \frametitle{RTC API}
-  \begin{lstlisting}
+  \begin{lstlisting}[style=c]
 #include <linux/rtc.h>
 
 struct rtc_class_ops {
@@ -713,7 +705,7 @@ int rtc_register_device(struct rtc_device *rtc);
 
 \begin{frame}[containsverbatim]
   \frametitle{RTC API (cont'd)}
-  \begin{lstlisting}
+  \begin{lstlisting}[style=c]
 /* If device has alarm interrupt line (DS1307 doesn't) */
 void rtc_update_irq(struct rtc_device *rtc, unsigned long num,
 		    unsigned long events);
@@ -741,7 +733,7 @@ time64_t rtc_tm_to_time64(struct rtc_time *tm);
   \end{figure}
 
 BCD helper functions:
-  \begin{lstlisting}
+  \begin{lstlisting}[style=c]
 #include <linux/bcd.h>
 
 unsigned bcd2bin(unsigned char val); /* decode BCD value to dec value */
@@ -764,13 +756,13 @@ unsigned char bin2bcd(unsigned val); /* encode dec value to BCD value */
 \end{frame}
 
 \begin{frame}[containsverbatim]
-  \frametitle{Linux Turns 27!}
+  \frametitle{Linux Turns 28! \textit{(25 Aug)}}
   \begin{columns}
     \column{0.5\textwidth}
       \begin{itemize}
         \item A lot of frameworks already exist
         \item Check out \texttt{Documentation/}
-	\item \sout{Doxygen} kernel-doc comments
+        \item \sout{Doxygen} kernel-doc comments
         \item Linux code base is a good source of examples
         \item \texttt{git grep} is useful to find references:
           \begin{lstlisting}[language=bash]
@@ -818,7 +810,7 @@ Note that:
 
 \begin{frame}[containsverbatim]
   \frametitle{I2C Driver: Init}
-  \begin{lstlisting}[caption=Initialization of I2C driver]
+  \begin{lstlisting}[caption=Initialization of I2C driver, style=c]
 static struct i2c_driver ds1307x_driver = {
 	.driver = {
 		.name		= "ds1307x",
@@ -835,7 +827,7 @@ module_i2c_driver(ds1307x_driver);
 
 \begin{frame}[containsverbatim]
   \frametitle{I2C Driver: Device Tables}
-  \begin{lstlisting}[caption=Device Tables used in our driver]
+  \begin{lstlisting}[caption=Device Tables used in our driver, style=c]
 static const struct i2c_device_id ds1307x_id[] = {
 	{ "ds1307x" },
 	{ },
@@ -852,7 +844,7 @@ MODULE_DEVICE_TABLE(of, ds1307x_of_match);
 
 \begin{frame}[containsverbatim]
   \frametitle{I2C Driver: Probe and remove}
-  \begin{lstlisting}[caption=Probe and remove functions in our driver]
+  \begin{lstlisting}[caption=Probe and remove functions in our driver, style=c]
 #include <linux/module.h>
 #include <linux/i2c.h>
 
@@ -874,7 +866,7 @@ static int ds1307x_remove(struct i2c_client *client)
 \begin{frame}[containsverbatim]
   \frametitle{Raw API Example}
   \vspace*{-14mm}
-  \begin{lstlisting}[caption=Example of raw I2C API usage]
+  \begin{lstlisting}[caption=Example of raw I2C API usage, style=c]
 	int ret;
 	u8 reg = 0x01;	/* I2C register */
 	u8 buf;		/* where to read */
@@ -904,7 +896,7 @@ static int ds1307x_remove(struct i2c_client *client)
 
 \begin{frame}[containsverbatim]
   \frametitle{SMBus API Example}
-  \begin{lstlisting}[caption=Example of SMBus API usage]
+  \begin{lstlisting}[caption=Example of SMBus API usage, style=c]
 	s32 data;
 
 	data = i2c_smbus_read_byte_data(client, 0x01); /* minutes */
@@ -989,6 +981,7 @@ rtc-ds1307 2-0068: registered as rtc1
 
 \begin{frame}
   \frametitle{Assignment 1 (basic)}
+  \underline{Implement Proof-of-Concept driver}:
   \begin{itemize}
     \item Connect RTC module to your BBB
     \item Check with \texttt{i2cdetect} tool it's visible on bus
@@ -998,16 +991,30 @@ rtc-ds1307 2-0068: registered as rtc1
           called
     \item Try to read from some I2C register; make sure it's the same value as
           \texttt{i2cget} tool reports
+    \item Next documents will help you to implement the driver:
+    \begin{itemize}
+      \item \href{https://datasheets.maximintegrated.com/en/ds/DS1307.pdf}
+                 {DS1307 Datasheet}
+      \item \href {https://www.nxp.com/docs/en/user-guide/UM10204.pdf}
+                  {I2C Specification}
+      \item \href {https://www.kernel.org/doc/html/v4.19/}
+                  {Kernel API Documentation} (look for I2C API)
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Assignment 2 (advanced)}
+  \underline{Implement productizable driver}:
   \begin{itemize}
     \item Implement reading/writing registers via regmap
     \item Implement RTC using RTC kernel API
     \item Set your RTC using \texttt{hwclock} tool; make sure it works
     \item Test if it's consistent between power-off / power-on
+    \begin{itemize}
+      \item Module's battery might be discharged; in that case it won't store
+            your data after power-off
+    \end{itemize}
     \item \textbf{Hint}: If in troubles, use existing drivers as
           examples/templates
   \end{itemize}

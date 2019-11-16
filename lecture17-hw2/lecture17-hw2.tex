@@ -23,9 +23,6 @@
 \usepackage{color}
 \usepackage{listings}
 
-% For tikz
-\colorlet{darkgreen}{OliveGreen}
-\colorlet{darkred}{BrickRed}
 % Not used
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -35,34 +32,6 @@
 \definecolor{comment}{RGB}{0,128,0} % dark green
 \definecolor{string}{RGB}{255,0,0}  % red
 \definecolor{keyword}{RGB}{0,0,255} % blue
-
-% Schematic elements colors
-\tikzset{
-  R/.append style={color=darkred, /tikz/text=black},
-  battery1/.append style={color=darkred, /tikz/text=black},
-  leDo/.append style={color=darkred, /tikz/text=black},
-  short/.append style={color=darkgreen, /tikz/text=black},
-  nos/.append style={color=darkred, /tikz/text=black},
-  every vcc node/.style={color=darkred, /tikz/text=black},
-  every ground node/.style={color=darkred, /tikz/text=black},
-  %%% Pin element definition (crossed-out box)
-  box/.style={
-    rectangle, minimum size=0.5 cm, very thick, draw=black, color=darkred
-  },
-  pin/.style={
-    box,
-    append after command={
-      [every edge/.append style={
-        very thick,
-        darkred,
-        shorten >=\pgflinewidth,
-        shorten <=\pgflinewidth,
-      }]
-      (\tikzlastnode.north west) edge (\tikzlastnode.south east)
-      (\tikzlastnode.north east) edge (\tikzlastnode.south west)
-    }
-  }
-}
 
 % Fix dashs/hyphens in listings
 \makeatletter

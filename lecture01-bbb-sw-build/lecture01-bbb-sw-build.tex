@@ -34,8 +34,8 @@
 \begin{frame}
   \frametitle{Linux Kernel ProCamp Details}
   \begin{itemize}
-  \item Tue/Fri, 9 am - 11 pm
-  \item Schedule: \url{https://docs.google.com/spreadsheets/d/16dcTo2irL5ZUQTrBJF7Kjia8v-J--IezS5GyD0MPB74/edit\#gid=129771073}
+  \item Mon/Fri, 3pm - 5pm
+  \item Schedule: \href{https://docs.google.com/spreadsheets/d/1-phJXfXE7oJCl6RYvqWh\_D2ELcz4xeRTiTvYohZn0wI/edit\#gid=0}{link}
   \item Target: \textsc{BeagleBone Black} and QEMU
   \item Host: Personal laptop (Ubuntu 18.04) or Training Centre PC
   \item Training Centre PC:
@@ -51,36 +51,90 @@
 \begin{frame}
   \frametitle{Mentors}
   \begin{itemize}
+  \item Oleksandr Redchuk \href{mailto:oleksandr.redchuk@globallogic.com}{<oleksandr.redchuk@globallogic.com>}
   \item Sam Protsenko \href{mailto:semen.protsenko@globallogic.com}{<semen.protsenko@globallogic.com>}
-  \item Andrii Tymkiv \href{mailto:andrii.tymkiv@globallogic.com}{<andrii.tymkiv@globallogic.com>}
+  \item Andrii Lukin \href{mailto:andrii.lukin@globallogic.com}{<andrii.lukin@globallogic.com>}
   \item Vitaliy Vasylskyy \href{mailto:vitaliy.vasylskyy@globallogic.com}{<vitaliy.vasylskyy@globallogic.com>}
   \item Illia Smyrnov \href{mailto:illia.smyrnov@globallogic.com}{<illia.smyrnov@globallogic.com>}
   \item Ruslan Bilovol \href{mailto:ruslan.bilovol@globallogic.com}{<ruslan.bilovol@globallogic.com>}
-  \item Andrii Lukin \href{mailto:andrii.lukin@globallogic.com}{<andrii.lukin@globallogic.com>}
-  \item Oleksii Kurochko \href{mailto:oleksii.kurochko@globallogic.com}{<oleksii.kurochko@globallogic.com>}
   \end{itemize}
 \end{frame}
 
 \section{Hardware Overview}
 
 \begin{frame}
+  \frametitle{Embedded Systems}
+  \begin{columns}
+    \column{0.35\textwidth}
+    Embedded Systems:
+     \begin{itemize}
+       \item Mobile
+       \item Automotive
+       \item Networking
+       \item Smart TVs, game consoles, set-top boxes
+       \item IoT
+       \item Medical
+       \item Aerospace
+       \item Industry
+     \end{itemize}
+    \column{0.65\textwidth}
+    \begin{figure}
+      \includegraphics[scale=0.04]{images/mobile.jpg}
+      \includegraphics[scale=0.4]{images/car.png}
+      \includegraphics[scale=0.1]{images/router.png}
+      \includegraphics[scale=0.05]{images/surveillance-camera.png}
+      \includegraphics[scale=0.07]{images/tv.png}
+      \includegraphics[scale=0.2]{images/game-console.jpg}
+      \includegraphics[scale=0.13]{images/shuttle.pdf}
+      \centering
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
   \frametitle{Embedded Programming}
   \begin{columns}
     \column{0.5\textwidth}
+      Differences from regular system:
       \begin{itemize}
-        \item What is an embedded system?
-        \item Differences from regular system:
-        \begin{itemize}
-          \item Cross-compiling
-          \item Flashing
-          \item Serial console
-          \item Testing concerns
-          \item Working with hardware
-          \item Non discoverable buses on board (device tree, platform drivers)
-        \end{itemize}
+        \item Cross-compiling
+        \item Flashing
+        \item Serial console
+        \item Testing concerns
+        \item Working with hardware
+        \item Non discoverable buses on board (device tree, platform drivers)
       \end{itemize}
     \column{0.5\textwidth}
-      \includegraphics[scale=0.25]{images/embedded.jpg}
+      \includegraphics[scale=0.27]{images/host-target.jpg}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{ARM Cortex A/R/M Families}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{images/cortex-families.png}
+    \caption{ARM Cortex Processor Families}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{AM335x SoC}
+  \begin{columns}
+    \column{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.4]{images/am335x.png}
+        \caption{AM335x Functional Diagram}
+      \end{figure}
+      \vspace*{-12mm} % to reduce too much whitespace after figure block
+    \column{0.5\textwidth}
+      \begin{itemize}
+        \item \textbf{Board}: \textsc{BeagleBone Black} \\ (Texas Instruments)
+        \item \textbf{SoC}: AM3358 (Texas Instruments)
+        \item \textbf{Processor core}: Cortex-A8
+        \item \textbf{Processor architecture}: ARMv7-A
+      \end{itemize}
   \end{columns}
 \end{frame}
 
@@ -89,16 +143,6 @@
   \begin{center}
     \includegraphics[scale=0.82]{images/bbb02.png}
   \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{AM335x SoC}
-  \begin{figure}
-    \centering
-    \includegraphics[scale=0.4]{images/am335x.png}
-    \caption{AM335x Functional Diagram}
-  \end{figure}
-  \vspace*{-12mm} % to reduce too much whitespace after figure block
 \end{frame}
 
 \begin{frame}
@@ -225,7 +269,8 @@
       \item Bare-metal targeted (\texttt{arm-eabi}): for U-Boot and kernel
       \item Linux targeted (\texttt{arm-linux-gnueabihf}): for BusyBox
     \end{itemize}
-    \item In our case: host = x86\_64, target = ARM
+    \item In our case: host = x86\_64, target = ARMv7-A
+    \item We use only GNU (GCC-based) toolchains
   \end{itemize}
 \end{frame}
 
@@ -408,7 +453,7 @@ CONFIG_SND_USB_AUDIO=\textcolor{red}{m}
   \frametitle{How to Speed-Up the Build? (page 2)}
   \begin{itemize}
     \item \alert{\textbf{Kbuild tracks all dependencies very well!}}
-    \item Try to avoid the \textit{clean build}:
+    \item \textit{Clean build} (try to avoid it):
     \begin{verbatim}
 $ make
 // Do some changes to source code

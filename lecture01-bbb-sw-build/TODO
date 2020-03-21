@@ -1,3 +1,0 @@
-- add slide about Cortex family and ARMv7 arch
-- there are Cortex-A and Cortex-M toolchains
-- note: do not setup toolchains in ~/.bashrc

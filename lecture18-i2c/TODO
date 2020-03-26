@@ -1,3 +1,16 @@
+- caption for the figure with bidirectional buffer
+- group the list about Open-Drain usage
+- I2C: add image with "core" and "driver"
+  - and explain about bus in kernel:
+    - drivers/devices
+    - matching
+    - callbacks and API
+- remove image with diodes from matrix kbd connection
+- simplify everything in homework, leave only necessary stuff
+- matrix keyboard polling: rework to more progressive
+
+
+
 TODO remains:
  - write my own RTC driver and test
  - why the module probes OK and read finishes OK when I2C device is not

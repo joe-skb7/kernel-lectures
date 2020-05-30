@@ -100,7 +100,6 @@ static int hw1_thread_func(void *data)
 		}
 
 		iowrite32(led_val, led_gpio);
-
 		msleep(100);
 	}
 
@@ -143,6 +142,6 @@ static void __exit hw1_exit(void)
 module_init(hw1_init);
 module_exit(hw1_exit);
 
-MODULE_AUTHOR("Sam Protsenko <semen.protsenko@globallogic.com>");
+MODULE_AUTHOR("Sam Protsenko <joe.skb7@gmail.com>");
 MODULE_DESCRIPTION("Test module 1");
 MODULE_LICENSE("GPL");

@@ -105,6 +105,6 @@ static void hw3_exit(void)
 module_init(hw3_init);
 module_exit(hw3_exit);
 
-MODULE_AUTHOR("Sam Protsenko <semen.protsenko@globallogic.com>");
+MODULE_AUTHOR("Sam Protsenko <joe.skb7@gmail.com>");
 MODULE_DESCRIPTION("Test module 3");
 MODULE_LICENSE("GPL");

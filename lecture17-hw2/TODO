@@ -1,3 +1,11 @@
+- Add picture illustrating driver (tape without cursor movement)
+- Use TEMP_FAILURE_RETRY()?
+  - and explain it, providing implementation code, on slides
+
+    https://www.gnu.org/software/libc/manual/html_node/Interrupted-Primitives.html#Interrupted-Primitives
+    https://cs.android.com/search?q=TEMP_FAILURE_RETRY&sq=&ss=android%2Fplatform%2Fsuperproject
+
+
 + assignment (optional): power management
 + assignment (optional): overlays
 

@@ -86,6 +86,6 @@ static struct i2c_driver ds1307x_driver = {
 
 module_i2c_driver(ds1307x_driver);
 
-MODULE_AUTHOR("Sam Protsenko <semen.protsenko@globallogic.com>");
+MODULE_AUTHOR("Sam Protsenko <joe.skb7@gmail.com>");
 MODULE_DESCRIPTION("DS1307 RTC driver");
 MODULE_LICENSE("GPL");

@@ -56,6 +56,6 @@ static void __exit hw2_exit(void)
 module_init(hw2_init);
 module_exit(hw2_exit);
 
-MODULE_AUTHOR("Sam Protsenko <semen.protsenko@globallogic.com>");
+MODULE_AUTHOR("Sam Protsenko <joe.skb7@gmail.com>");
 MODULE_DESCRIPTION("Test module 2");
 MODULE_LICENSE("GPL");

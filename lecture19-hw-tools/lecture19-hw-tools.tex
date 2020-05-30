@@ -1,139 +1,15 @@
-\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
-\usetheme{metropolis}
-%\usecolortheme[snowy,cautious]{owl}
-\usecolortheme[snowy]{owl}
-\metroset{block=fill}
-
-% For regular math font
-\usefonttheme[onlymath]{serif}
-
-\usepackage{appendixnumberbeamer}
-\usepackage{booktabs}
-\usepackage{fancyvrb}
-\usepackage{makecell}
-\usepackage{xcolor}
-%\usepackage{soul}
-\usepackage[normalem]{ulem}
-\usepackage{hyperref}
-\hypersetup{colorlinks,allcolors=.,urlcolor=blue}
-\usepackage{graphicx}
-\usepackage{siunitx}
-\usepackage[siunitx,europeanresistors]{circuitikz}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{color}
-\usepackage{listings}
-%\usepackage{media9}
-
-% For tikz
-\colorlet{darkgreen}{OliveGreen}
-\colorlet{darkred}{BrickRed}
-% Not used
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
-\definecolor{myblue}{rgb}{0,0,1}
-% For C
-\definecolor{comment}{RGB}{0,128,0} % dark green
-\definecolor{string}{RGB}{255,0,0}  % red
-\definecolor{keyword}{RGB}{0,0,255} % blue
-
-% Schematic elements colors
-\tikzset{
-  R/.append style={color=darkred, /tikz/text=black},
-  battery1/.append style={color=darkred, /tikz/text=black},
-  leDo/.append style={color=darkred, /tikz/text=black},
-  short/.append style={color=darkgreen, /tikz/text=black},
-  nos/.append style={color=darkred, /tikz/text=black},
-  every vcc node/.style={color=darkred, /tikz/text=black},
-  every ground node/.style={color=darkred, /tikz/text=black},
-  %%% Pin element definition (crossed-out box)
-  box/.style={
-    rectangle, minimum size=0.5 cm, very thick, draw=black, color=darkred
-  },
-  pin/.style={
-    box,
-    append after command={
-      [every edge/.append style={
-        very thick,
-        darkred,
-        shorten >=\pgflinewidth,
-        shorten <=\pgflinewidth,
-      }]
-      (\tikzlastnode.north west) edge (\tikzlastnode.south east)
-      (\tikzlastnode.north east) edge (\tikzlastnode.south west)
-    }
-  }
-}
-
-% Fix dashs/hyphens in listings
-\makeatletter
-\lst@CCPutMacro\lst@ProcessOther {"2D}{\lst@ttfamily{-{}}{-{}}}
-\@empty\z@\@empty
-\makeatother
-
-\newfontfamily\Bera{Bitstream Vera Sans Mono}[Scale=1]
-\newfontfamily\TgCursor{TeX Gyre Cursor}[Scale=1]
-\newfontfamily\Dejavu{DejaVu Sans Mono}[Scale=1]
-%\newfontfamily\Consolas{Consolas}[Scale=0.85]
-\newfontfamily\Consolas{Consolas}[Scale=1]
-
-\lstdefinestyle{global} {
-%  basicstyle=\fontfamily{cmvtt}\selectfont
-%  basicstyle=\tiny\ttfamily,
-%  basicstyle=\tiny\Dejavu,
-  basicstyle=\tiny\Consolas,
-  backgroundcolor=\color{white},
-  commentstyle=\itshape\color{comment},
-  stringstyle=\color{string},
-  keywordstyle=\bfseries\color{keyword},
-  %identifierstyle=\bfseries,
-  numbers=left,
-  numberstyle=\tiny,
-  numbersep=5pt,
-  frame=lines,
-  breaklines=true,
-  prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
-  showstringspaces=false,
-  upquote=true,
-  tabsize=8,
-  escapeinside=\`\`,
-}
-
-\lstdefinestyle{c} {
-  escapeinside=\`\`,
-}
-
-\lstdefinestyle{make} {
-  language=make,
-  morekeywords={if,ifneq,else,elseif,endif},
-}
-
-\lstset {
-  language=C,
-  style=global,
-}
-
-% allowframebreaks numbering in the title
-\newcounter{cont}
-\makeatletter
-\setbeamertemplate{frametitle continuation}{%
-    \setcounter{cont}{\beamer@endpageofframe}%
-    \addtocounter{cont}{1}%
-    \addtocounter{cont}{-\beamer@startpageofframe}%
-    (\insertcontinuationcount/\arabic{cont})%
-}
-\makeatother
+\input{../header}
 
 \title{Kernel Course: Lecture 19}
 \subtitle{Hardware Tools in Embedded Kernel Development}
-\date{\today}
-\author{Sam Protsenko}
-\institute{GlobalLogic}
+\author{Sam Protsenko \texorpdfstring{\\ <joe.skb7@gmail.com>}{}}
+\date{\vspace*{5mm}\today}
+% \institute{Dark Engineering Initiative}
 
 \begin{document}
 
-\sisetup{
+% Must be done inside of document, otherwise wrong math fonts will be used
+\sisetup {
   math-rm = \mathrm,
   inter-unit-product = \ensuremath{{}\cdot{}},
   per-mode = fraction,

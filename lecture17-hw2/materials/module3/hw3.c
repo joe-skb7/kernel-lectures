@@ -20,7 +20,7 @@
 
 #define DRIVER_NAME	"hw3"
 #define WRITE_BUF_LEN	10
-#define READ_BUF_LEN	2	/* 1 character and \0 */
+#define READ_BUF_LEN	2	/* one character and \0 */
 
 struct hw3 {
 	struct miscdevice mdev;
@@ -175,8 +175,6 @@ static irqreturn_t hw3_btn_isr(int irq, void *data)
 	struct hw3 *hw3 = data;
 	unsigned long flags;
 
-	pr_err("### isr\n");
-
 	spin_lock_irqsave(&hw3->lock, flags);
 	hw3->data_ready = true;
 	hw3->btn_on = gpiod_get_value(hw3->btn_gpio);
@@ -199,8 +197,6 @@ static int hw3_probe(struct platform_device *pdev)
 	u32 debounce;
 	bool wakeup_source;
 	int ret;
-
-	pr_err("### probe\n");
 
 	hw3 = devm_kzalloc(&pdev->dev, sizeof(*hw3), GFP_KERNEL);
 	if (!hw3)
@@ -252,7 +248,6 @@ static int hw3_probe(struct platform_device *pdev)
 
 	gpiod_set_value(hw3->led_gpio, 0);
 
-	pr_err("### probe finished OK\n");
 	return 0;
 }
 
@@ -309,6 +304,6 @@ static struct platform_driver hw3_driver = {
 module_platform_driver(hw3_driver);
 
 MODULE_ALIAS("platform:hw3");
-MODULE_AUTHOR("Sam Protsenko <semen.protsenko@globallogic.com>");
+MODULE_AUTHOR("Sam Protsenko <joe.skb7@gmail.com>");
 MODULE_DESCRIPTION("Test module 3");
 MODULE_LICENSE("GPL");

@@ -1,3 +1,49 @@
+- add item about indexing external module code w.r.t. kernel in separate dir
+
+
+Update metodichka and lecture02 w.r.t. this:
+--------------------------------------------------------------------------------
+
+> 1. Було би добри мати команди
+> => run emmc
+> => run sdcard
+> Тому що наступні команди є і вони корисні:
+> => run tftpramboot
+> => run netboot
+> Хочеться в Uboot мати вибір з чого бутатися.
+>
+
+Такі команди вже є:
+
+    bootcmd_legacy_mmc0=setenv mmcdev 0; setenv bootpart 0:2 ; run mmcboot
+    bootcmd_legacy_mmc1=setenv mmcdev 1; setenv bootpart 1:2 ; run mmcboot
+
+Ви можете їх запускати через "run".
+
+Більше того, ці команди виконуються по черзі при автоматичному запуску
+(коли користувач не заходить в U-Boot shell), як стадії команди
+distro_bootcmd (яка виконується з bootcmd). І якщо не вийшло
+завантажитись з SD карти (mmc0), то U-Boot спробує завантажитись з
+eMMC.
+
+Ланцюжок запуску ядра буде приблизно такий:
+
+    distro_bootcmd -> bootcmd_legacy_mmc1 -> mmcboot -> mmcloados -> bootz
+
+Тож якщо наприклад запустити U-Boot з вставленою SD картою, але не
+затискати кнопку BOOT, то:
+  1. ROM code запустить U-Boot з eMMC (бо кнопка BOOT не була затиснута)
+  2. U-Boot запустить ядро з SD карти (бо distro_bootcmd спочатку
+спробує запустити bootcmd_legacy_mmc0)
+  3. Ядро примонтує RootFS з SD карти, бо U-Boot передає ядру параметр
+"root=" (через Device Tree), в який пише UUID розділу, знайдений по
+змінній $bootpart (див. команду bootcmd_legacy_mmc0)
+
+--------------------------------------------------------------------------------
+
+- add to slides: do not index all architectures! only index built files etc.
+
+
 - figure with environment: show environment loading from eMMC too
 
 

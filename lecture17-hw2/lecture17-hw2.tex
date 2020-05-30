@@ -1,106 +1,15 @@
-\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
-\usetheme{metropolis}
-%\usecolortheme[snowy,cautious]{owl}
-\usecolortheme[snowy]{owl}
-\metroset{block=fill}
-
-% For regular math font
-\usefonttheme[onlymath]{serif}
-
-\usepackage{appendixnumberbeamer}
-\usepackage{booktabs}
-\usepackage{fancyvrb}
-\usepackage{makecell}
-\usepackage{xcolor}
-%\usepackage{soul}
-\usepackage[normalem]{ulem}
-\usepackage{hyperref}
-\hypersetup{colorlinks,allcolors=.,urlcolor=blue}
-\usepackage{graphicx}
-\usepackage{siunitx}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{color}
-\usepackage{listings}
-
-% Not used
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
-\definecolor{myblue}{rgb}{0,0,1}
-% For C
-\definecolor{comment}{RGB}{0,128,0} % dark green
-\definecolor{string}{RGB}{255,0,0}  % red
-\definecolor{keyword}{RGB}{0,0,255} % blue
-
-% Fix dashs/hyphens in listings
-\makeatletter
-\lst@CCPutMacro\lst@ProcessOther {"2D}{\lst@ttfamily{-{}}{-{}}}
-\@empty\z@\@empty
-\makeatother
-
-\newfontfamily\Bera{Bitstream Vera Sans Mono}[Scale=1]
-\newfontfamily\TgCursor{TeX Gyre Cursor}[Scale=1]
-\newfontfamily\Dejavu{DejaVu Sans Mono}[Scale=1]
-%\newfontfamily\Consolas{Consolas}[Scale=0.85]
-\newfontfamily\Consolas{Consolas}[Scale=1]
-
-\lstdefinestyle{global} {
-%  basicstyle=\fontfamily{cmvtt}\selectfont
-%  basicstyle=\tiny\ttfamily,
-%  basicstyle=\tiny\Dejavu,
-  basicstyle=\tiny\Consolas,
-  backgroundcolor=\color{white},
-  commentstyle=\itshape\color{comment},
-  stringstyle=\color{string},
-  keywordstyle=\bfseries\color{keyword},
-  %identifierstyle=\bfseries,
-  numbers=left,
-  numberstyle=\tiny,
-  numbersep=5pt,
-  frame=lines,
-  breaklines=true,
-  prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
-  showstringspaces=false,
-  upquote=true,
-  tabsize=8,
-  escapeinside=\`\`,
-}
-
-\lstdefinestyle{c} {
-  escapeinside=\`\`,
-}
-
-\lstdefinestyle{make} {
-  language=make,
-  morekeywords={if,ifneq,else,elseif,endif},
-}
-
-\lstset {
-  language=C,
-  style=global,
-}
-
-% allowframebreaks numbering in the title
-\newcounter{cont}
-\makeatletter
-\setbeamertemplate{frametitle continuation}{%
-    \setcounter{cont}{\beamer@endpageofframe}%
-    \addtocounter{cont}{1}%
-    \addtocounter{cont}{-\beamer@startpageofframe}%
-    (\insertcontinuationcount/\arabic{cont})%
-}
-\makeatother
+\input{../header}
 
 \title{Kernel Course: Lecture 17}
 \subtitle{Communicating with Hardware (part 2)}
-\date{\today}
-\author{Sam Protsenko}
-\institute{GlobalLogic}
+\author{Sam Protsenko \texorpdfstring{\\ <joe.skb7@gmail.com>}{}}
+\date{\vspace*{5mm}\today}
+% \institute{Dark Engineering Initiative}
 
 \begin{document}
 
-\sisetup{
+% Must be done inside of document, otherwise wrong math fonts will be used
+\sisetup {
   math-rm = \mathrm,
   inter-unit-product = \ensuremath{{}\cdot{}},
   per-mode = fraction,
@@ -126,13 +35,13 @@
 \begin{frame}
   \frametitle{Device/driver matching}
   \begin{itemize}
-    \item In real drivers we rarely use just \texttt{module\_init()}
     \item Driver must be platform-independend
     \item Device-specific data is obtained from Device Tree
+    \item In real drivers we rarely use just \texttt{module\_init()}
     \item Driver \textbf{binding} is the process of associating a device with
-          a device driver that can control it
-    \item Bus drivers (\textit{driver core}) handle this, as bus driver knows
-          about all devices and drivers on this bus
+          a driver
+    \item Bus drivers (\textit{driver core}) handle the binding \\
+          (as bus driver knows about all devices and drivers on this bus)
   \end{itemize}
 \end{frame}
 
@@ -162,7 +71,7 @@
     \item Easier to implement than regular char dev
   \end{itemize}
 
-  \begin{lstlisting}[language=c,numbers=none]
+  \begin{lstlisting}[style=c,numbers=none]
 #include <linux/miscdevice.h>
 
 struct miscdevice  {
@@ -186,7 +95,7 @@ void misc_deregister(struct miscdevice *misc);
   \item GPIO descriptor is usually obtained from device tree
   \end{itemize}
 
-  \begin{lstlisting}[language=c,numbers=none]
+  \begin{lstlisting}[style=c,numbers=none]
 #include <linux/gpio/consumer.h>
 
 /* Get descriptor structure from dts */
@@ -204,7 +113,7 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce); /* usec */
 
 \begin{frame}[containsverbatim]
   \frametitle{API: Device Tree}
-  \begin{lstlisting}[language=c,numbers=none]
+  \begin{lstlisting}[style=c,numbers=none]
 #include <linux/of.h>
 
 /*
@@ -241,7 +150,7 @@ bool of_property_read_bool(const struct device_node *np, const char *propname);
 devres entry is freed
   \end{itemize}
 
-  \begin{lstlisting}[language=c,numbers=none]
+  \begin{lstlisting}[style=c,numbers=none]
 void *devm_kzalloc(struct device *dev, size_t size, gfp_t gfp);
 struct gpio_desc *devm_gpiod_get(struct device *dev, const char *con_id,
 				 enum gpiod_flags flags);
@@ -277,7 +186,7 @@ the RAM chips.
 
 \begin{frame}[containsverbatim]
   \frametitle{API: Power Management}
-  \begin{lstlisting}[language=c,numbers=none]
+  \begin{lstlisting}[style=c,numbers=none]
 #include <linux/pm.h>
 
 /* Populate it and set to struct driver (.pm field) */
@@ -356,7 +265,7 @@ int disable_irq_wake(unsigned int irq);
 
 \begin{frame}[containsverbatim,allowframebreaks=1]
   \frametitle{Third Attempt: Code}
-  \lstinputlisting[caption=hw3.c]{materials/module3/hw3.c}
+  \lstinputlisting[caption=hw3.c, style=c]{materials/module3/hw3.c}
 \end{frame}
 
 \begin{frame}[containsverbatim]
@@ -377,15 +286,16 @@ int disable_irq_wake(unsigned int irq);
 
 \begin{frame}[containsverbatim]
   \frametitle{Makefile}
+  \vspace*{-3mm}
   \lstinputlisting[caption=Makefile, style=make]{materials/module3/Makefile}
-  \vspace*{-5mm}
+  \vspace*{-7mm}
 \end{frame}
 
 \begin{frame}[containsverbatim]
   \frametitle{Building Everything (On Host)}
   Setup environment:
   \begin{lstlisting}[language=bash,numbers=none]
-    `\$` export PATH=/opt/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf/bin:$PATH
+    `\$` export PATH=/opt/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin:$PATH
     `\$` export CROSS_COMPILE=arm-linux-gnueabihf-
     `\$` export ARCH=arm
     `\$` export KDIR=~/repos/linux-stable

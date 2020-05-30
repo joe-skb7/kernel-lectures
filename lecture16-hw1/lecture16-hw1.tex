@@ -1,138 +1,15 @@
-\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
-\usetheme{metropolis}
-%\usecolortheme[snowy,cautious]{owl}
-\usecolortheme[snowy]{owl}
-\metroset{block=fill}
-
-% For regular math font
-\usefonttheme[onlymath]{serif}
-
-\usepackage{appendixnumberbeamer}
-\usepackage{booktabs}
-\usepackage{fancyvrb}
-\usepackage{makecell}
-\usepackage{xcolor}
-%\usepackage{soul}
-\usepackage[normalem]{ulem}
-\usepackage{hyperref}
-\hypersetup{colorlinks,allcolors=.,urlcolor=blue}
-\usepackage{graphicx}
-\usepackage{siunitx}
-\usepackage[siunitx,europeanresistors,nooldvoltagedirection]{circuitikz}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{color}
-\usepackage{listings}
-
-% For tikz
-\colorlet{darkgreen}{OliveGreen}
-\colorlet{darkred}{BrickRed}
-% Not used
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
-\definecolor{myblue}{rgb}{0,0,1}
-% For C
-\definecolor{comment}{RGB}{0,128,0} % dark green
-\definecolor{string}{RGB}{255,0,0}  % red
-\definecolor{keyword}{RGB}{0,0,255} % blue
-
-% Schematic elements colors
-\tikzset{
-  R/.append style={color=darkred, /tikz/text=black},
-  battery1/.append style={color=darkred, /tikz/text=black},
-  leDo/.append style={color=darkred, /tikz/text=black},
-  short/.append style={color=darkgreen, /tikz/text=black},
-  nos/.append style={color=darkred, /tikz/text=black},
-  every vcc node/.style={color=darkred, /tikz/text=black},
-  every ground node/.style={color=darkred, /tikz/text=black},
-  %%% Pin element definition (crossed-out box)
-  box/.style={
-    rectangle, minimum size=0.5 cm, very thick, draw=black, color=darkred
-  },
-  pin/.style={
-    box,
-    append after command={
-      [every edge/.append style={
-        very thick,
-        darkred,
-        shorten >=\pgflinewidth,
-        shorten <=\pgflinewidth,
-      }]
-      (\tikzlastnode.north west) edge (\tikzlastnode.south east)
-      (\tikzlastnode.north east) edge (\tikzlastnode.south west)
-    }
-  }
-}
-
-% Fix dashs/hyphens in listings
-\makeatletter
-\lst@CCPutMacro\lst@ProcessOther {"2D}{\lst@ttfamily{-{}}{-{}}}
-\@empty\z@\@empty
-\makeatother
-
-\newfontfamily\Bera{Bitstream Vera Sans Mono}[Scale=1]
-\newfontfamily\TgCursor{TeX Gyre Cursor}[Scale=1]
-\newfontfamily\Dejavu{DejaVu Sans Mono}[Scale=1]
-%\newfontfamily\Consolas{Consolas}[Scale=0.85]
-\newfontfamily\Consolas{Consolas}[Scale=1]
-
-\lstdefinestyle{global} {
-%  basicstyle=\fontfamily{cmvtt}\selectfont
-%  basicstyle=\tiny\ttfamily,
-%  basicstyle=\tiny\Dejavu,
-  basicstyle=\tiny\Consolas,
-  backgroundcolor=\color{white},
-  commentstyle=\itshape\color{comment},
-  stringstyle=\color{string},
-  keywordstyle=\bfseries\color{keyword},
-  %identifierstyle=\bfseries,
-  numbers=left,
-  numberstyle=\tiny,
-  numbersep=5pt,
-  frame=lines,
-  breaklines=true,
-  prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
-  showstringspaces=false,
-  upquote=true,
-  tabsize=8,
-  escapeinside=\`\`,
-}
-
-\lstdefinestyle{c} {
-  escapeinside=\`\`,
-}
-
-\lstdefinestyle{make} {
-  language=make,
-  morekeywords={if,ifneq,else,elseif,endif},
-}
-
-\lstset {
-  language=C,
-  style=global,
-}
-
-% allowframebreaks numbering in the title
-\newcounter{cont}
-\makeatletter
-\setbeamertemplate{frametitle continuation}{%
-    \setcounter{cont}{\beamer@endpageofframe}%
-    \addtocounter{cont}{1}%
-    \addtocounter{cont}{-\beamer@startpageofframe}%
-    (\insertcontinuationcount/\arabic{cont})%
-}
-\makeatother
+\input{../header}
 
 \title{Kernel Course: Lecture 16}
 \subtitle{Communicating with Hardware (part 1)}
-\date{\today}
-\author{Sam Protsenko}
-\institute{GlobalLogic}
+\author{Sam Protsenko \texorpdfstring{\\ <joe.skb7@gmail.com>}{}}
+\date{\vspace*{5mm}\today}
+% \institute{Dark Engineering Initiative}
 
 \begin{document}
 
-\sisetup{
+% Must be done inside of document, otherwise wrong math fonts will be used
+\sisetup {
   math-rm = \mathrm,
   inter-unit-product = \ensuremath{{}\cdot{}},
   per-mode = fraction,
@@ -151,7 +28,7 @@
 
 \begin{frame}
   \frametitle{Objectives}
-  \begin{itemize}
+  \begin{enumerate}
     \item Learn how to communicate with hardware \\
           (Hardware = SoC + Board + External)
     \item Grasp the whole development chain: \textbf{Hardware \textrightarrow{}
@@ -164,7 +41,7 @@
       \item Learn missing parts
     \end{itemize}
     \item Prepare base for further development
-  \end{itemize}
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}
@@ -189,8 +66,8 @@
 
     \item User space:
     \begin{itemize}
-      \item Test driver via \texttt{echo} and \texttt{cat}
-      \item Develop application for testing driver
+      \item Test the driver via \texttt{echo} and \texttt{cat}
+      \item Develop application for testing the driver
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -259,10 +136,14 @@
       \begin{itemize}
         \item \underline{Push-pull states}: \textbf{0} and \textbf{1}
         \item \underline {Open-drain states}: \textbf{0} and \textbf{Hi-Z}
-        \item Open-drain can be bidirectional
+      \end{itemize}
+      \vspace{5mm}
+      Open drain features:
+      \begin{itemize}
+        \item Can be bidirectional
         \item External \textbf{pull-up} is usually used
-        \item Allows several devices (line sharing, \textbf{wired-AND})
-        \item Often used for 1-wire or I2C (bit-banged)
+        \item Allows line sharing (\textbf{wired-AND})
+        \item Often used for 1-wire, I2C
         \item Different voltage can be used
       \end{itemize}
   \end{columns}
@@ -631,7 +512,7 @@ virt_addr = ioremap(phys_addr, size);
 
 \begin{frame}[containsverbatim]
   \frametitle{API: ioremap (cont'd)}
-  \begin{lstlisting}[language=c,numbers=none]
+  \begin{lstlisting}[style=c,numbers=none]
 #include <asm/io.h>
 
 /* Create/remove the mapping to virtual address space for I/O region */
@@ -648,7 +529,7 @@ u32 ioread32(const volatile void __iomem *addr);
 
 \begin{frame}[containsverbatim,allowframebreaks=1]
   \frametitle{First Attempt: Code}
-  \lstinputlisting[caption=hw1.c]{materials/module1/hw1.c}
+  \lstinputlisting[caption=hw1.c, style=c]{materials/module1/hw1.c}
 \end{frame}
 
 \begin{frame}
@@ -730,7 +611,7 @@ int gpio_get_value(unsigned gpio);
 
 \begin{frame}[containsverbatim,allowframebreaks=1]
   \frametitle{Second Attempt: Code}
-  \lstinputlisting[caption=hw2.c]{materials/module2/hw2.c}
+  \lstinputlisting[caption=hw2.c, style=c]{materials/module2/hw2.c}
 \end{frame}
 
 \begin{frame}
@@ -852,7 +733,7 @@ int gpio_get_value(unsigned gpio);
       \end{itemize}
     \item It's even better to use \texttt{libgpiod} (you'll have to
           cross-compile it for ARM)
-    \item Don't use GPIO sysfs interface, it's obsolete
+    \item \alert{Don't use GPIO sysfs interface, it's obsolete}
     \item Send me all source files
     \item \textbf{NOTE}: User-space GPIO interface is useful for makers, but
           usually it's a poor substitute for real kernel drivers

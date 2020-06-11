@@ -11,6 +11,7 @@
 % Must be done inside of document, otherwise wrong math fonts will be used
 \sisetup {
   math-rm = \mathrm,
+  math-micro = \char"00B5, % "micro" sign Unicode, keep this file ASCII
   inter-unit-product = \ensuremath{{}\cdot{}},
   per-mode = fraction,
 %  fraction-function = \tfrac,
@@ -44,17 +45,35 @@
 
 \begin{frame}
   \frametitle{Multimeter Overview}
+  Masures constant electrical values:
   \begin{itemize}
-    \item Measure voltages:
+    \item Voltage:
       \begin{itemize}
+        \item $ R_V = \infty $
         \item Can be used for power issues diagnostics
         \item Helpful during board bring-up
       \end{itemize}
-    \item Measure consumed current:
+    \item Current:
       \begin{itemize}
+        \item $ R_A = 0 $
+        \item \alert{Don't measure the current in power outlets!}
         \item Useful for power management improvements
+        \item Sometimes ``10A'' input jack must be used
+      \end{itemize}
+    \item Resistance:
+      \begin{itemize}
+        \item Resistors must be unsoldered before measurement
+        \item Use beeper mode to check a loop
       \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[standout]
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.8]{images/multimeter.png}
+  \end{figure}
+  Multimeter Demo: Suspend/Resume Current
 \end{frame}
 
 \begin{frame}
@@ -79,12 +98,44 @@
   \[ P = V \cdot I \]
 \end{frame}
 
-\begin{frame}[standout]
+\begin{frame}
+  \frametitle{Current Measurement Setup}
   \begin{figure}
     \centering
-    \includegraphics[scale=0.8]{images/multimeter.png}
+    \includegraphics[scale=0.07]{images/multimeter-setup.png}
+    \caption{Setup for BBB suspend/resume current measurement}
   \end{figure}
-  Multimeter Demo: Suspend/Resume Current
+  \vspace*{-10mm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Measuring BBB suspend/resume current (page 1/3)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.28]{images/multimeter-demo-1.jpg}
+    \caption{Current draw: before suspend ($ I = \SI{310}{\mA} $)}
+  \end{figure}
+  \vspace*{-5mm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Measuring BBB suspend/resume current (page 2/3)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.28]{images/multimeter-demo-2.jpg}
+    \caption{Current draw: during suspend ($ I = \SI{20}{\mA} $)}
+  \end{figure}
+  \vspace*{-5mm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Measuring BBB suspend/resume current (page 3/3)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.28]{images/multimeter-demo-3.jpg}
+    \caption{Current draw: after resume ($ I = \SI{310}{\mA} $)}
+  \end{figure}
+  \vspace*{-5mm}
 \end{frame}
 
 \section{Scope}
@@ -94,16 +145,19 @@
   \begin{itemize}
     \item Software vs hardware
     \item Parameters: frequency, data rate; + probes (capacity)
-    \item Measuring periodic signals
     \item Trigger feature
     \item Divisors (/1, /10)
     \item 2 channels (common ground!)
     \item Scale: time, voltage
     \item ``Auto'' button
-    \item ``Run/stop'' button
     \item Measure mode
   \end{itemize}
-  How it can be useful for kernel development?
+  \textbf{Useful}:
+  \begin{itemize}
+    \item To debug fast-changing stuff (can't be done in software)
+    \item To see what is actually happening on the line
+  \end{itemize}
+  \vspace*{-5mm}
 \end{frame}
 
 \begin{frame}[standout]
@@ -111,24 +165,197 @@
   Scope Demo \#1: Measuring Delay
 \end{frame}
 
+\begin{frame}
+  \frametitle{Button and LED Device}
+  \vspace*{-3mm}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.22]{images/architecture2.pdf}
+    \caption{Button and LED Device: Functional Block Diagram}
+  \end{figure}
+
+  \begin{itemize}
+    \item There is a delay between button press and LED toggle events
+          (\texttt{hw1.c})
+  \end{itemize}
+  \vspace*{-2mm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Scope Setup}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.25]{images/scope-setup.png}
+    \caption{Setup for button/LED delay measurement}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Scope Settings}
+  \begin{columns}
+    \column{0.5\textwidth}
+    Channel settings:
+    \begin{itemize}
+      \item CH1 (blue): Button line
+      \item CH2 (yellow): LED line
+      \item Coupling: DC
+      \item Probe: 10X
+      \item Voltage scale: \SI{1}{\volt / div}
+      \item Time scale: \SI{1}{\ms / div}
+    \end{itemize}
+
+    \column{0.5\textwidth}
+    Trigger menu:
+    \begin{itemize}
+      \item Type: Edge; Slope: Rise,Fall
+      \item Source: CH2 (LED line)
+      \item Mode: Normal
+      \item Coupling: DC
+      \item Trigger level: \SI{1}{\volt} (\SI{0}{\volt} ... \SI{3.3}{\volt})
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Measuring Delay (page 1/2)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.75]{images/scope-trace-delay1.png}
+    \caption{Scope screenshot: LED off \textrightarrow{} on}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Measuring Delay (page 2/2)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.75]{images/scope-trace-delay2.png}
+    \caption{Scope screenshot: LED on \textrightarrow{} off}
+  \end{figure}
+\end{frame}
+
 \begin{frame}[standout]
   \frametitle{Demo 2}
   Scope Demo \#2: Investigating Kernel Sleeps
+\end{frame}
+
+\begin{frame}[containsverbatim,allowframebreaks=1]
+  \frametitle{Square Wave Module}
+  \lstinputlisting[caption=sqw.c, style=c]{materials/sqw/sqw.c}
+\end{frame}
+
+\begin{frame}[containsverbatim,allowframebreaks=1]
+  \frametitle{Load CPU script}
+  \lstinputlisting[caption=\detokenize{load_cpu.sh}, language=bash]
+    {materials/sqw/load_cpu.sh}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Stable Scope Display}
+  To make periodic signal ``stand still'', trigger must be configured:
+  \begin{itemize}
+    \item Type: Edge
+    \item Source: CH2
+    \item Slope: Rise
+    \item Mode: Auto
+    \item Coupling: DC
+    \item Trigger level: put it in the wave center
+  \end{itemize}
+
+  Or just use ``Auto'' button to configure that for you.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Checking Square Wave (page 1/2)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.75]{images/scope-trace-sqw1.png}
+    \caption{Scope screenshot: CPU load 0\%}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Checking Square Wave (page 2/2)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.75]{images/scope-trace-sqw2.png}
+    \caption{Scope screenshot: CPU load 100\%}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[standout]
+  \frametitle{Demo 3}
+  Scope Demo \#3: Investigating I2C Transmission
+\end{frame}
+
+\begin{frame}
+  \frametitle{Probes}
+  \begin{columns}
+    \column{0.6\textwidth}
+      \begin{itemize}
+        \item Use ``10X'' mode for regular operation:
+          \begin{itemize}
+            \item $ C_{in} = \SI{20}{\pF} \Rightarrow T = R_{PU} \cdot C_{in} = \SI{50}{\kohm} \cdot \SI{20}{\pF} = \SI{1}{\us} $
+          \end{itemize}
+        \item Use ``1X'' mode for low voltage signals:
+          \begin{itemize}
+            \item $ C_{in} = \SI{100}{\pF} \Rightarrow T = R_{PU} \cdot C_{in} = \SI{50}{\kohm} \cdot \SI{100}{\pF} = \SI{5}{\us} $
+          \end{itemize}
+      \end{itemize}
+  \vspace*{5mm}
+  \[ T_{SDC} = \frac{1}{\SI{100}{\kHz}} = \SI{10}{\us} \]
+    \column{0.4\textwidth}
+      \begin{figure}
+        \centering
+          \hspace*{-5mm}\includegraphics[scale=0.27]{images/scope-probe-x10-circuit.pdf}\hspace*{-4mm}
+        \caption{Oscilloscope probe (X10) circuit}
+      \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Checking I2C Transmission (page 1/2)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.75]{images/scope-trace-i2c-x1.png}
+    \caption{Scope screenshot: I2C Transmission using X1 probe}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Checking I2C Transmission (page 2/2)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.75]{images/scope-trace-i2c-x10.png}
+    \caption{Scope screenshot: I2C Transmission using X10 probe}
+  \end{figure}
 \end{frame}
 
 \section{Logic Analyzer}
 
 \begin{frame}
   \frametitle{Logic Analyzer Overview}
-  \begin{itemize}
-    \item Catches digital levels
-    \item Stores collected data to internal (hardware) buffer
-    \item App can parse protocols (I2C, UART, etc)
-    \item Parameters: max data rate (freq), ports count, protocols support
-    \item Useful for debugging (sw, hw) and reverse engineering (``sniffing'')
-    \item Some specialized LAs exist (like USB ones)
-  \end{itemize}
-  How it can be useful for kernel development?
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{itemize}
+      \item Catches digital levels
+      \item Stores collected data to internal (hardware) buffer
+      \item App can parse protocols (I2C, UART)
+      \item Parameters: max data rate (freq), ports count, protocols support
+      \item Some specialized LAs exist (e.g. USB)
+      \item \textbf{Useful}:
+        \begin{itemize}
+          \item For problem isolation / root-causing
+          \item For reverse engineering (``sniffing'')
+        \end{itemize}
+    \end{itemize}
+    \column{0.5\textwidth}
+    \begin{figure}
+      \centering
+      \hspace*{-2mm}\includegraphics[scale=0.17]{images/saleae-la.jpg}
+      \caption{Saleae 16 Logic Analyzer}
+    \end{figure}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[standout]
@@ -136,9 +363,93 @@
   LA Demo \#1: I2C (SDA, SCL)
 \end{frame}
 
+\begin{frame}
+  \frametitle{I2C data exchange with RTC (page 1/3)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.38]{images/la-i2c-window.png}
+    \caption{I2C data exchange with DS1307 sniffed by Logic Analyzer}
+  \end{figure}
+  \vspace*{-10mm}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{I2C data exchange with RTC (page 2/3)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.55]{images/la-i2c-read.png}
+    \caption{I2C read from 0x01 register}
+  \end{figure}
+  \begin{lstlisting}[numbers=none]
+[15347.357045] ### my_rtc probe(): enter
+[15347.362433] ### read data = 0x15
+  \end{lstlisting}
+  \vspace*{-5mm}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+  \frametitle{I2C data exchange with RTC (page 3/3)}
+  \vspace*{-1mm}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{images/la-i2c-read-bulk.png}
+    \caption{I2C bulk read (starting from 0x00 register)}
+  \end{figure}
+  \begin{lstlisting}[numbers=none]
+[15347.368436] ds1307x 2-0068: reg 0x0  = 0xd4
+[15347.372824] ds1307x 2-0068: reg 0x1  = 0x15
+[15347.377113] ds1307x 2-0068: reg 0x2  = 0x4
+[15347.381395] ds1307x 2-0068: reg 0x3  = 0x1
+[15347.385593] ds1307x 2-0068: reg 0x4  = 0x1
+[15347.389808] ds1307x 2-0068: reg 0x5  = 0x1
+[15347.394005] ds1307x 2-0068: reg 0x6  = 0x0
+  \end{lstlisting}
+  \vspace*{-7mm}
+\end{frame}
+
 \begin{frame}[standout]
   \frametitle{Demo 2}
   LA Demo \#2: UART (Tx, Rx)
+\end{frame}
+
+\begin{frame}
+  \frametitle{LA UART Setup}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.087]{images/la-uart-setup.png}
+    \vspace*{-1mm}
+    \caption{Setup for tracing UART with Logic Analyzer}
+  \end{figure}
+  \vspace*{-7mm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{UART data exchange with serial console (page 1/3)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.32]{images/la-uart-window.png}
+    \vspace*{-1mm}
+    \caption{UART data exchange with FTDI sniffed by Logic Analyzer}
+  \end{figure}
+  \vspace*{-11mm}
+\end{frame}
+
+\begin{frame}
+  \frametitle{UART data exchange with serial console (page 2/3)}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.55]{images/la-uart-char.png}
+    \caption{Type in `\texttt{p}' character and get it back in minicom}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{UART data exchange with serial console (page 3/3)}
+  \begin{figure}
+    \centering
+    \hspace*{-8mm}\includegraphics[scale=0.5]{images/la-uart-pwd.png}\hspace*{-8mm}
+    \caption{\texttt{pwd} command response}
+  \end{figure}
 \end{frame}
 
 \begin{frame}[standout]
@@ -148,28 +459,75 @@
 \section{JTAG}
 
 \begin{frame}
-  \frametitle{JTAG Overview}
+  \frametitle{JTAG Intro}
+  Allows one to debug program running on board just like user-space application
+  with GDB:
   \begin{itemize}
-    \item OpenOCD: Flyswatter (FT2232H based, MPSSE)
-    \item Proprietary JTAG: XDS100v2
-    \item Allows one to debug program running on board just like user-space
-          application with GDB:
-      \begin{itemize}
-        \item Breakpoints
-        \item Read/write registers
-        \item Stop/run CPU
-        \item Read/write memory
-        \item Load images
-        \item Examine stack
-        \item Can debug U-Boot, kernel, user-space apps/libs, even ROM-code...
-      \end{itemize}
+    \item Breakpoints
+    \item Read/write registers
+    \item Stop/run CPU
+    \item Read/write memory
+    \item Load images
+    \item Examine stack
+    \item Can debug U-Boot, kernel, user-space apps/libs, even ROM-code...
   \end{itemize}
 \end{frame}
 
-\subsection{OpenOCD}
+\begin{frame}
+  \frametitle{JTAG Bus}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.45]{images/jtag_chain.pdf}
+    \caption{Daisy-chained JTAG}
+  \end{figure}
+  \begin{itemize}
+    \item JTAG is a serial bus (IEEE1149.1 standard)
+    \item AM335x implements JTAG (has JTAG pins)
+    \item PC doesn't have JTAG controller, so \textbf{JTAG adapter} must be used
+  \end{itemize}
+\end{frame}
 
-\begin{frame}[standout]
-  OpenOCD
+\begin{frame}
+  \frametitle{JTAG Adapters}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{images/jtag-sw.pdf}
+    \caption{Connecting BBB JTAG to PC}
+  \end{figure}
+  Adapters require some software. Some examples for BBB:
+    \begin{itemize}
+      \item \textbf{Flyswatter 2} (FT2232H based, MPSSE): OpenOCD
+      \item \textbf{XDS100v2}: Proprietary software
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{JTAG support in AM335x}
+  \begin{figure}
+    \centering
+    \hspace*{-2mm}\includegraphics[scale=0.33]{images/jtag-bbb-scheme.pdf}\hspace*{-2mm}
+    \caption{JTAG connector in BBB}
+  \end{figure}
+  See TRM for details on debug interface implementation in AM335x.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Flyswatter2 Overview}
+  \begin{columns}
+    \column{0.4\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.3]{images/bbb-connector.jpg}
+        \caption{BBB JTAG Connector}
+      \end{figure}
+    \column{0.6\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.32]{images/bbb-and-flyswatter.jpg}
+        \caption{BBB and Flyswatter2}
+      \end{figure}
+  \end{columns}
+  \vspace*{-5mm}
 \end{frame}
 
 \begin{frame}[containsverbatim]
@@ -194,25 +552,6 @@
         $ arm-eabi-gdb vmlinux
       \end{lstlisting}
   \end{columns}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Flyswatter2 Overview}
-  \begin{columns}
-    \column{0.4\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[scale=0.3]{images/bbb-connector.jpg}
-        \caption{BBB JTAG Connector}
-      \end{figure}
-    \column{0.6\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[scale=0.32]{images/bbb-and-flyswatter.jpg}
-        \caption{BBB and Flyswatter2}
-      \end{figure}
-  \end{columns}
-  \vspace*{-5mm}
 \end{frame}
 
 \begin{frame}
@@ -391,12 +730,6 @@ Info : am335x.cpu: hardware has 6 breakpoints, 2 watchpoints
     \item mdw, mww
   \end{itemize}
   See \textbf{OpenOCD User's Guide} for details.
-\end{frame}
-
-\subsection{XDS100v2}
-
-\begin{frame}[standout]
-  XDS100v2
 \end{frame}
 
 \begin{frame}

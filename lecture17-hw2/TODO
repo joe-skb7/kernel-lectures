@@ -1,3 +1,5 @@
+- Add gpiod_direction() functions
+
 - Add picture illustrating driver (tape without cursor movement)
 - Use TEMP_FAILURE_RETRY()?
   - and explain it, providing implementation code, on slides
@@ -8,6 +10,7 @@
 
 + assignment (optional): power management
 + assignment (optional): overlays
++ assignment (optional): remove locks, reproduce race condition from user-space (Bash)
 
 
 

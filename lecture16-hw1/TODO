@@ -1,3 +1,7 @@
+- GPIO module: it's actually only Control Module (I/O pad);
+  it has its own in/out buffers, GPIO has its own
+  TODO: colors on the picture? maybe rework the whole picture?
+
 - Add slide with electrical components (symbol + photo + name)?
 - Add references (LDD3, Bootlin slides, related kernel documentation)
 - Add prerequisites: bring BBB and laptop

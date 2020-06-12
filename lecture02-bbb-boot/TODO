@@ -1,3 +1,6 @@
+- add 'lsblk' to check where is your SD card
+  - also add to metodichka
+
 - add item about indexing external module code w.r.t. kernel in separate dir
 
 

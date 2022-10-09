@@ -22,7 +22,7 @@ Next packages have to be installed before building kernel lectures:
 - texlive-xetex
 
 For `fonts-fira` you can build and install deb-package from
-[https://github.com/joe-skb7/pkg-fonts-fira](here):
+[here](https://github.com/joe-skb7/pkg-fonts-fira):
 
 ```
 $ sudo dpkg -i fonts-fira*.deb

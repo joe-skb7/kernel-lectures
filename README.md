@@ -6,6 +6,9 @@ in LaTeX format. Compiled PDF files are included as well.
 In `bbb-tutorial/` directory you can find my up-to-date tutorial for BeagleBone
 Black bring up.
 
+You can find the rest of the lectures for this course in Oleksandr Redchuk
+[repository](https://github.com/ReAlUA/kernel-lectures).
+
 ## Build dependencies
 
 Next packages have to be installed before building kernel lectures:
